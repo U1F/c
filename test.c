@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <time.h>
 
 // reverse string function:
 const int BIRTHYEAR = 1981;
@@ -213,6 +214,11 @@ int main(int argc, char *argv[])
         printf("No company found\n");
         break;
     }
+
+    // time
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    printf("Today is %d-%d-%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
     
     return 0;
 }
