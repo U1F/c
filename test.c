@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
     case EBAY:
         printf("Ebay\n");
         break;
-    case MICROSOFT: 
+    case MICROSOFT:
         printf("Microsoft\n");
         break;
     default:
@@ -219,6 +219,24 @@ int main(int argc, char *argv[])
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     printf("Today is %d-%d-%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
-    
+
+    // allocate a block of memory for a string
+    char *str = malloc(15);
+    strcpy(str, "Ulf");
+    // printf("String = %s, Address = %d\n", str, str);  // this is not working
+    printf("String = %s", str); // this is working
+    // printf("Address = %d\n", str); This is not working
+    printf("\n");
+    printf("Address = %p\n", str); // this is working
+    printf("\nSize = %zu\n", sizeof(str));
+    printf("\nLength = %lu\n", strlen(str));
+    // Reallocating memory
+    str = realloc(str, 25);
+    strcat(str, ".com");
+    printf("String = %s, Address = %p\n", str, str);
+    printf("\nSize = %zu\n", sizeof(str));
+    printf("\nLength = %lu\n", strlen(str));
+    free(str);
+
     return 0;
 }
