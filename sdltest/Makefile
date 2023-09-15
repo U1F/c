@@ -1,9 +1,20 @@
-# OBJS specifies which files to compile as part of the project
+#OBJS specifies which files to compile as part of the project
 OBJS = sdltest.c
 
-# OBJ_NAME specifies the name of our executable
+#CC specifies which compiler we're using
+CC = gcc
+
+#COMPILER_FLAGS specifies the additional compilation options we're using
+# -w suppresses all warnings
+COMPILER_FLAGS = -w
+
+#LINKER_FLAGS specifies the libraries we're linking against
+LINKER_FLAGS = $(shell pkg-config --cflags --libs sdl2)
+
+#OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = sdltest
 
-# This is the target that compiles our executable
+#This is the target that compiles our executable
 all : $(OBJS)
-	$(CC) $(OBJS) -w $(shell pkg-config --cflags --libs sdl2) -o $(OBJ_NAME)
+	$(CC) $(OBJS) -w $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+	
