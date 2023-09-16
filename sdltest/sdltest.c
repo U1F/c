@@ -39,9 +39,11 @@ int main(int argc, char *args[])
     {
         while (SDL_PollEvent(&e))
         {
-            if (e.type == SDL_QUIT)
+            if (e.type == SDL_QUIT) {
+
                 printf("The app was terminated by the user.\n");
                 quit = TRUE;
+            }
         }
     }
   
