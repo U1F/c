@@ -5,8 +5,16 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 enum boolean { FALSE, TRUE };
+
 /*
+ * Main function.
+ *
  * Arguments are not evaluated yet.
+ * 
+ * argc: number of arguments
+ * args: array of arguments
+ * 
+ * Return value: 0 if the program was terminated successfully, 1 otherwise.
  */
 int main(int argc, char *args[]) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
