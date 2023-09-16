@@ -1,15 +1,22 @@
 #include "SDL_render.h"
 #include "SDL_stdinc.h"
+#include "SDL_video.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdio.h>
 
-const int QUARTER_WIDTH = 320;
-const int QUARTER_HEIGHT = 180;
+const int EIGHTH_WIDTH = 160;
+const int EIGHTH_HEIGHT = 90;
+const int QUARTER_WIDTH = EIGHTH_WIDTH * 2;
+const int QUARTER_HEIGHT = EIGHTH_HEIGHT * 2;
 const int HALF_WIDTH = QUARTER_WIDTH * 2;
 const int HALF_HEIGHT = QUARTER_HEIGHT * 2;
 const int SCREEN_WIDTH = HALF_WIDTH * 2;
 const int SCREEN_HEIGHT = HALF_HEIGHT * 2;
+
+const int TOP_LEFT = 0;
+const int ASSET_AREA_WIDTH = EIGHTH_WIDTH * 3;
+const int EDITOR_AREA_WIDTH = EIGHTH_WIDTH * 5;
 
 struct Color {
   Uint8 red;
@@ -39,8 +46,13 @@ struct Color magenta = {0xFF, 0x00, 0xFF};
  * Return value: 0 if the program was terminated successfully, 1 otherwise.
  */
 int main(int argc, char *argv[]) {
-  (void)argc;
-  (void)argv;
+  if (argc > 1) {
+    for (int i = 0; i < argc; i++) {
+      printf("The program was called with the following argument: %s\n",
+             argv[i]);
+    }
+  }
+  
   int initialization_failed = SDL_Init(SDL_INIT_VIDEO) < 0;
   if (initialization_failed) {
     printf("Error while initializing SDL: %s\n", SDL_GetError());
@@ -59,14 +71,12 @@ int main(int argc, char *argv[]) {
   SDL_Window *window = NULL;
   window = SDL_CreateWindow("HELLO SDL", SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                            SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+                            SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
   if (window == NULL) {
     printf("Error while creating SDL_Window: %s\n", SDL_GetError());
     SDL_Quit();
     return 1;
   }
-
-  SDL_SetWindowMinimumSize(window, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
 
@@ -78,7 +88,7 @@ int main(int argc, char *argv[]) {
     SDL_Quit();
     return 1;
   }
-
+  SDL_SetWindowMinimumSize(window, SCREEN_WIDTH, SCREEN_HEIGHT);
   SDL_Texture *your_image_texture = IMG_LoadTexture(renderer, "your_image.png");
   if (your_image_texture == NULL) {
     printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
@@ -98,17 +108,19 @@ int main(int argc, char *argv[]) {
     while (SDL_PollEvent(&e)) {
 
       if (e.type == SDL_QUIT) {
-
         printf("The app was terminated by the user.\n");
         quit = 1;
-      } // End of: if (e.type == SDL_QUIT)
+      } else if (e.type == SDL_WINDOWEVENT_RESIZED) {
+        int newWidth = e.window.data1;
+        int newHeight = e.window.data2;
+        SDL_RenderSetLogicalSize(renderer, newWidth, newHeight);
+      }
 
     } // End of: while (SDL_PollEvent(%e))
 
     // In your main loop, before calling SDL_RenderPresent
     SDL_SetRenderDrawColor(renderer, cyan.red, cyan.green, cyan.blue, 0xFF);
-    SDL_Rect fillRect = {QUARTER_WIDTH, QUARTER_HEIGHT, HALF_WIDTH,
-                         HALF_HEIGHT};
+    SDL_Rect fillRect = {TOP_LEFT, TOP_LEFT, EDITOR_AREA_WIDTH, SCREEN_HEIGHT};
     SDL_RenderFillRect(renderer, &fillRect);
 
     SDL_RenderCopy(renderer, your_image_texture, NULL, NULL);
