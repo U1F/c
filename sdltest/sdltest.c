@@ -35,6 +35,7 @@ struct Color yellow = {0xFF, 0xFF, 0x00};
 struct Color cyan = {0x00, 0xFF, 0xFF};
 struct Color magenta = {0xFF, 0x00, 0xFF};
 
+int handleEvent(SDL_Event, SDL_Renderer *);
 /*
  * Main function.
  *
@@ -46,13 +47,10 @@ struct Color magenta = {0xFF, 0x00, 0xFF};
  * Return value: 0 if the program was terminated successfully, 1 otherwise.
  */
 int main(int argc, char *argv[]) {
-  if (argc > 1) {
-    for (int i = 0; i < argc; i++) {
-      printf("The program was called with the following argument: %s\n",
-             argv[i]);
-    }
+  if (argc == 2) {
+    printf("The program was called with the following argument: %s\n", argv[1]);
   }
-  
+
   int initialization_failed = SDL_Init(SDL_INIT_VIDEO) < 0;
   if (initialization_failed) {
     printf("Error while initializing SDL: %s\n", SDL_GetError());
@@ -69,16 +67,14 @@ int main(int argc, char *argv[]) {
   }
 
   SDL_Window *window = NULL;
-  window = SDL_CreateWindow("HELLO SDL", SDL_WINDOWPOS_UNDEFINED,
-                            SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                            SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+  window = SDL_CreateWindow(
+      "HELLO SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
   if (window == NULL) {
     printf("Error while creating SDL_Window: %s\n", SDL_GetError());
     SDL_Quit();
     return 1;
   }
-
-
 
   SDL_Renderer *renderer = NULL;
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -106,16 +102,7 @@ int main(int argc, char *argv[]) {
     SDL_RenderClear(renderer);
 
     while (SDL_PollEvent(&e)) {
-
-      if (e.type == SDL_QUIT) {
-        printf("The app was terminated by the user.\n");
-        quit = 1;
-      } else if (e.type == SDL_WINDOWEVENT_RESIZED) {
-        int newWidth = e.window.data1;
-        int newHeight = e.window.data2;
-        SDL_RenderSetLogicalSize(renderer, newWidth, newHeight);
-      }
-
+      quit = handleEvent(e, renderer);
     } // End of: while (SDL_PollEvent(%e))
 
     // In your main loop, before calling SDL_RenderPresent
@@ -135,3 +122,39 @@ int main(int argc, char *argv[]) {
 
   return 0;
 } // End of: main function
+//
+//
+int handleEvent(SDL_Event e, SDL_Renderer *renderer) {
+  int shouldQuit = 0;
+  switch (e.type) {
+  case SDL_QUIT:
+    printf("The app was terminated by the user.\n");
+    shouldQuit = 1;
+    break;
+  case SDL_WINDOWEVENT: 
+  if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+        int newWidth = e.window.data1;
+        int newHeight = e.window.data2;
+        if (newWidth > 0 && newHeight > 0) {  // Only act on valid dimensions
+          SDL_RenderSetLogicalSize(renderer, newWidth, newHeight);
+          printf("newWidth: %d, newHeight: %d\n", newWidth, newHeight);
+        }
+      }
+   break;
+  case SDL_KEYDOWN:
+    printf("SDL_KEYDOWN\n");
+    break;
+  case SDL_KEYUP:
+    printf("SDL_KEYUP\n");
+    break;
+  case SDL_MOUSEMOTION:
+    printf("SDL_MOUSEMOTION\n");
+    break;
+  case SDL_MOUSEBUTTONDOWN:
+    printf("SDL_MOUSEBUTTONDOWN\n");
+    break;
+  default:
+    break;
+  }
+  return shouldQuit;
+}
