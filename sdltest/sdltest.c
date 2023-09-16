@@ -1,5 +1,6 @@
 #include "SDL_stdinc.h"
 #include <SDL.h>
+#include <SDL_image.h>
 #include <stdio.h>
 
 const int QUARTER_WIDTH = 160;
@@ -36,11 +37,21 @@ struct Color magenta = {0xFF, 0x00, 0xFF};
  *
  * Return value: 0 if the program was terminated successfully, 1 otherwise.
  */
-int main(int argc, char *args[]) {
-
+int main(int argc, char *argv[]) {
+  (void)argc;
+  (void)argv;
   int initialization_failed = SDL_Init(SDL_INIT_VIDEO) < 0;
   if (initialization_failed) {
     printf("Error while initializing SDL: %s\n", SDL_GetError());
+    return 1;
+  }
+
+  int img_initialization_failed =
+      (IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG;
+  if (img_initialization_failed) {
+    printf("SDL_image could not initialize! SDL_image Error: %s\n",
+           IMG_GetError());
+    SDL_Quit();
     return 1;
   }
 
@@ -63,6 +74,18 @@ int main(int argc, char *args[]) {
     return 1;
   }
 
+  SDL_Surface *loadedSurface = IMG_Load("your_image.png");
+  if (loadedSurface == NULL) {
+    printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
+    return 1;
+  }
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+  if (texture == NULL) {
+    printf("Unable to create texture! SDL Error: %s\n", SDL_GetError());
+    return 1;
+  }
+  SDL_FreeSurface(loadedSurface);
+
   SDL_Event e;
   int quit = 0;
   while (quit == 0) {
@@ -82,13 +105,16 @@ int main(int argc, char *args[]) {
 
     // In your main loop, before calling SDL_RenderPresent
     SDL_SetRenderDrawColor(renderer, cyan.red, cyan.green, cyan.blue, 0xFF);
-    SDL_Rect fillRect = {QUARTER_WIDTH, QUARTER_HEIGHT, HALF_WIDTH, HALF_HEIGHT};
+    SDL_Rect fillRect = {QUARTER_WIDTH, QUARTER_HEIGHT, HALF_WIDTH,
+                         HALF_HEIGHT};
     SDL_RenderFillRect(renderer, &fillRect);
 
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
     // Update screen
     SDL_RenderPresent(renderer);
   } // End of: while (quit == 0)
 
+  SDL_DestroyTexture(texture);
   SDL_DestroyRenderer(renderer);
 
   SDL_Quit();
