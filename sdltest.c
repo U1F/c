@@ -33,6 +33,7 @@ struct Color cyan = {0x00, 0xFF, 0xFF};
 struct Color magenta = {0xFF, 0x00, 0xFF};
 
 int handleEvent(SDL_Event, SDL_Renderer *);
+
 /*
  * Main function.
  *
@@ -119,8 +120,15 @@ int main(int argc, char *argv[]) {
 
   return 0;
 } // End of: main function
-//
-//
+
+/*
+ * Handle events.
+ *
+ * e: event
+ * renderer: renderer
+ *
+ * Return value: 0 if the program should not be terminated, 1 otherwise.
+ */
 int handleEvent(SDL_Event e, SDL_Renderer *renderer) {
   int shouldQuit = 0;
   switch (e.type) {
@@ -128,16 +136,16 @@ int handleEvent(SDL_Event e, SDL_Renderer *renderer) {
     printf("The app was terminated by the user.\n");
     shouldQuit = 1;
     break;
-  case SDL_WINDOWEVENT: 
-  if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-        int newWidth = e.window.data1;
-        int newHeight = e.window.data2;
-        if (newWidth > 0 && newHeight > 0) {  // Only act on valid dimensions
-          SDL_RenderSetLogicalSize(renderer, newWidth, newHeight);
-          printf("newWidth: %d, newHeight: %d\n", newWidth, newHeight);
-        }
+  case SDL_WINDOWEVENT:
+    if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+      int newWidth = e.window.data1;
+      int newHeight = e.window.data2;
+      if (newWidth > 0 && newHeight > 0) { // Only act on valid dimensions
+        SDL_RenderSetLogicalSize(renderer, newWidth, newHeight);
+        printf("newWidth: %d, newHeight: %d\n", newWidth, newHeight);
       }
-   break;
+    }
+    break;
   case SDL_KEYDOWN:
     printf("SDL_KEYDOWN\n");
     break;
@@ -154,4 +162,4 @@ int handleEvent(SDL_Event e, SDL_Renderer *renderer) {
     break;
   }
   return shouldQuit;
-}
+} // End of: handleEvent function
