@@ -10,13 +10,14 @@ enum boolean { FALSE, TRUE };
  * Main function.
  *
  * Arguments are not evaluated yet.
- * 
+ *
  * argc: number of arguments
  * args: array of arguments
- * 
+ *
  * Return value: 0 if the program was terminated successfully, 1 otherwise.
  */
 int main(int argc, char *args[]) {
+
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     printf("Error while initializing SDL: %s\n", SDL_GetError());
     return 1;
