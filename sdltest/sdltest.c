@@ -14,7 +14,7 @@ int main(int argc, char *args[])
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        printf("Error while initializing SDL: %s\n", SDL_GetError());
         return 1;
     }
    
@@ -22,7 +22,7 @@ int main(int argc, char *args[])
     window = SDL_CreateWindow("HELLO SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == NULL)
     {
-        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        printf("Error while creating SDL_Window: %s\n", SDL_GetError());
         return 1;
     }
   
@@ -33,7 +33,6 @@ int main(int argc, char *args[])
 
     SDL_UpdateWindowSurface(window);
 
-    // Hack to get window to stay up
     SDL_Event e;
     enum boolean quit = FALSE;
     while (quit == FALSE)
@@ -41,6 +40,7 @@ int main(int argc, char *args[])
         while (SDL_PollEvent(&e))
         {
             if (e.type == SDL_QUIT)
+                printf("The app was terminated by the user.\n");
                 quit = TRUE;
         }
     }
