@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 
   SDL_DestroyTexture(your_image_texture);
   SDL_DestroyRenderer(renderer);
-
+  SDL_DestroyWindow(window);
   SDL_Quit();
 
   return 0;
