@@ -2,8 +2,12 @@
 #include <SDL.h>
 #include <stdio.h>
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int QUARTER_WIDTH = 160;
+const int QUARTER_HEIGHT = 120;
+const int HALF_WIDTH = QUARTER_WIDTH * 2;
+const int HALF_HEIGHT = QUARTER_HEIGHT * 2;
+const int SCREEN_WIDTH = HALF_WIDTH * 2;
+const int SCREEN_HEIGHT = HALF_HEIGHT * 2;
 
 struct Color {
   Uint8 red;
@@ -21,6 +25,7 @@ struct Color blue = {0x00, 0x00, 0xFF};
 struct Color yellow = {0xFF, 0xFF, 0x00};
 struct Color cyan = {0x00, 0xFF, 0xFF};
 struct Color magenta = {0xFF, 0x00, 0xFF};
+
 /*
  * Main function.
  *
@@ -49,22 +54,21 @@ int main(int argc, char *args[]) {
     return 1;
   }
 
-  SDL_Surface *surface = NULL;
-  surface = SDL_GetWindowSurface(window);
-  if (surface == NULL) {
-    printf("Error while creating SDL_Surface: %s\n", SDL_GetError());
+  SDL_Renderer *renderer = NULL;
+  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  if (renderer == NULL) {
+    printf("Error while creating SDL_Renderer: %s\n", SDL_GetError());
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 1;
   }
 
-  SDL_FillRect(
-      surface, NULL,
-      SDL_MapRGB(surface->format, magenta.red, magenta.green, magenta.blue));
-
   SDL_Event e;
   int quit = 0;
   while (quit == 0) {
+    SDL_SetRenderDrawColor(renderer, magenta.red, magenta.green, magenta.blue,
+                           0xFF);
+    SDL_RenderClear(renderer);
 
     while (SDL_PollEvent(&e)) {
 
@@ -76,10 +80,16 @@ int main(int argc, char *args[]) {
 
     } // End of: while (SDL_PollEvent(%e))
 
-    SDL_UpdateWindowSurface(window);
+    // In your main loop, before calling SDL_RenderPresent
+    SDL_SetRenderDrawColor(renderer, cyan.red, cyan.green, cyan.blue, 0xFF);
+    SDL_Rect fillRect = {QUARTER_WIDTH, QUARTER_HEIGHT, HALF_WIDTH, HALF_HEIGHT};
+    SDL_RenderFillRect(renderer, &fillRect);
+
+    // Update screen
+    SDL_RenderPresent(renderer);
   } // End of: while (quit == 0)
 
-  SDL_DestroyWindow(window);
+  SDL_DestroyRenderer(renderer);
 
   SDL_Quit();
 
