@@ -1,3 +1,4 @@
+#include "SDL_render.h"
 #include "SDL_stdinc.h"
 #include <SDL.h>
 #include <SDL_image.h>
@@ -27,6 +28,7 @@ struct Color yellow = {0xFF, 0xFF, 0x00};
 struct Color cyan = {0x00, 0xFF, 0xFF};
 struct Color magenta = {0xFF, 0x00, 0xFF};
 
+SDL_Texture* loadTexture(const char *path, SDL_Renderer *renderer);
 /*
  * Main function.
  *
@@ -74,17 +76,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  SDL_Surface *loadedSurface = IMG_Load("your_image.png");
-  if (loadedSurface == NULL) {
-    printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
-    return 1;
-  }
-  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-  if (texture == NULL) {
-    printf("Unable to create texture! SDL Error: %s\n", SDL_GetError());
-    return 1;
-  }
-  SDL_FreeSurface(loadedSurface);
+  SDL_Texture *your_image_texture = loadTexture("your_image.png", renderer);
 
   SDL_Event e;
   int quit = 0;
@@ -109,15 +101,34 @@ int main(int argc, char *argv[]) {
                          HALF_HEIGHT};
     SDL_RenderFillRect(renderer, &fillRect);
 
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderCopy(renderer, your_image_texture, NULL, NULL);
     // Update screen
     SDL_RenderPresent(renderer);
   } // End of: while (quit == 0)
 
-  SDL_DestroyTexture(texture);
+  SDL_DestroyTexture(your_image_texture);
   SDL_DestroyRenderer(renderer);
 
   SDL_Quit();
 
   return 0;
 } // End of: main function
+
+
+SDL_Texture* loadTexture(const char *path, SDL_Renderer *renderer) {
+  SDL_Surface *loadedSurface = IMG_Load(path);
+  if (loadedSurface == NULL) {
+    printf("Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
+    return NULL;
+  }
+  
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+  if (texture == NULL) {
+    printf("Unable to create texture from %s! SDL Error: %s\n", path, SDL_GetError());
+  }
+
+  SDL_FreeSurface(loadedSurface);
+  return texture;
+}
+
+
