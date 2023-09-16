@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/ulf/Projects/c",
+            "binaryPath": "/home/ulf/Projects/c/sdltest",
+            "binaryArgs": []
+        }
+    ]
+}
