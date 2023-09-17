@@ -1,7 +1,5 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdio.h>
 #include "sdltest.h"
+#include <stdio.h>
 
 ConfigGraphics config_graphics;
 ConfigAudio config_audio;
@@ -13,9 +11,7 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const int ASSET_AREA_WIDTH = 200;
 
-
 const Point TOP_LEFT = {0, 0};
-
 
 const Color WHITE = {0xFF, 0xFF, 0xfF};
 const Color BLACK = {0x00, 0x00, 0x00};
@@ -34,7 +30,7 @@ int main(int argc, char *argv[]) {
   config_graphics.full_screen = 0;
   config_graphics.resolution_width = MIN_RESOLUTION_WIDTH;
   config_graphics.resolution_height = MIN_RESOLUTION_HEIGHT;
-  
+
   int settings_file_parsing_failed = parse_settings_file();
   if (settings_file_parsing_failed) {
     return 1;
@@ -58,7 +54,8 @@ int main(int argc, char *argv[]) {
   SDL_Window *window = NULL;
   window = SDL_CreateWindow(
       "HELLO SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-      config_graphics.resolution_width, config_graphics.resolution_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+      config_graphics.resolution_width, config_graphics.resolution_height,
+      SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
   if (window == NULL) {
     printf("Error while creating SDL_Window: %s\n", SDL_GetError());
     SDL_Quit();
@@ -129,48 +126,48 @@ int parse_settings_file() {
 
     if (key && value) {
       printf("Key: %s, Value: %s\n", key, value);
-      if (strcmp (key, "FullScreen") == 0) {
+      if (strcmp(key, "FullScreen") == 0) {
         printf("FullScreen: %s\n", value);
         config_graphics.full_screen = strcmp(value, "true") == 0;
-      } else if ( strcmp (key, "ResolutionWidth") == 0) {
+      } else if (strcmp(key, "ResolutionWidth") == 0) {
         config_graphics.resolution_width = atoi(value);
-      } else if ( strcmp (key, "ResolutionHeight") == 0) {
+      } else if (strcmp(key, "ResolutionHeight") == 0) {
         config_graphics.resolution_height = atoi(value);
-      } else if ( strcmp (key, "VSync") == 0) {
+      } else if (strcmp(key, "VSync") == 0) {
         config_graphics.vsync = strcmp(value, "true") == 0;
-      } else if ( strcmp (key, "AntiAliasing") == 0) {
+      } else if (strcmp(key, "AntiAliasing") == 0) {
         config_graphics.anti_aliasing = atoi(value);
-      } else if ( strcmp (key, "TextureQuality") == 0) {
+      } else if (strcmp(key, "TextureQuality") == 0) {
         config_graphics.texture_quality = strdup(value);
-      } else if ( strcmp (key, "ShaderQuality") == 0) {
+      } else if (strcmp(key, "ShaderQuality") == 0) {
         config_graphics.shader_quality = strdup(value);
-      } else if ( strcmp (key, "MasterVolume") == 0) {
+      } else if (strcmp(key, "MasterVolume") == 0) {
         config_audio.master_volume = atoi(value);
-      } else if ( strcmp (key, "MusicVolume") == 0) {
+      } else if (strcmp(key, "MusicVolume") == 0) {
         config_audio.music_volume = atoi(value);
-      } else if ( strcmp (key, "SFXVolume") == 0) {
+      } else if (strcmp(key, "SFXVolume") == 0) {
         config_audio.sfx_volume = atoi(value);
-      } else if ( strcmp (key, "VoiceVolume") == 0) {
+      } else if (strcmp(key, "VoiceVolume") == 0) {
         config_audio.voice_volume = atoi(value);
-      } else if ( strcmp (key, "AmbienceVolume") == 0) {
+      } else if (strcmp(key, "AmbienceVolume") == 0) {
         config_audio.ambience_volume = atoi(value);
-      } else if ( strcmp (key, "MuteAll") == 0) {
+      } else if (strcmp(key, "MuteAll") == 0) {
         config_audio.mute_all = strcmp(value, "true") == 0;
-      } else if ( strcmp (key, "AudioOutput") == 0) {
+      } else if (strcmp(key, "AudioOutput") == 0) {
         config_audio.audio_output = strdup(value);
-      } else if ( strcmp (key, "GridSize") == 0) {
+      } else if (strcmp(key, "GridSize") == 0) {
         config_editor_settings.grid_size = atoi(value);
-      } else if ( strcmp (key, "ShowGrid") == 0) {
+      } else if (strcmp(key, "ShowGrid") == 0) {
         config_editor_settings.show_grid = strcmp(value, "true") == 0;
-      } else if ( strcmp (key, "AutoSaveInterval") == 0) {
+      } else if (strcmp(key, "AutoSaveInterval") == 0) {
         config_editor_settings.auto_save_interval = atoi(value);
-      } else if ( strcmp (key, "UndoStackSize") == 0) {
+      } else if (strcmp(key, "UndoStackSize") == 0) {
         config_editor_settings.undo_stack_size = atoi(value);
-      } else if ( strcmp (key, "DefaultLayer") == 0) {
+      } else if (strcmp(key, "DefaultLayer") == 0) {
         config_editor_settings.default_layer = atoi(value);
-      } else if ( strcmp (key, "SnapToGrid") == 0) {
+      } else if (strcmp(key, "SnapToGrid") == 0) {
         config_editor_settings.snap_to_grid = strcmp(value, "true") == 0;
-      } else if ( strcmp (key, "TilesetPath") == 0) {
+      } else if (strcmp(key, "TilesetPath") == 0) {
         config_editor_settings.tileset_path = strdup(value);
       }
     }

@@ -5,5 +5,8 @@
             "binaryPath": "/home/ulf/Projects/c/sdltest",
             "binaryArgs": []
         }
-    ]
+    ],
+    "files.associations": {
+        "sdl.h": "c"
+    }
 }

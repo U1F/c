@@ -1,4 +1,10 @@
-#include <SDL2/SDL.h>
+#ifndef SDLTEST_H
+#define SDLTEST_H
+
+#include <SDL2/SDL.h> 
+#include <SDL2/SDL_image.h>
+
+#endif // SDLTEST_H
 
 typedef struct {
   int full_screen;
@@ -30,29 +36,26 @@ typedef struct {
   char *tileset_path;
 } ConfigEditorSettings;
 
-
-typedef struct  {
+typedef struct {
   int x;
   int y;
 } Point;
 
-typedef struct  {
+typedef struct {
   int width;
   int height;
 } Dimensions;
 
-
-typedef struct  {
+typedef struct {
   Point position;
   Dimensions dimensions;
 } Rect;
 
-typedef struct  {
+typedef struct {
   Uint8 red;
   Uint8 green;
   Uint8 blue;
 } Color;
-
 
 /*
  * Parse settings file.
