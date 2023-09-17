@@ -49,6 +49,9 @@ int main(int argc, char *argv[]) {
   config_graphics.resolution_width = MIN_RESOLUTION_WIDTH;
   config_graphics.resolution_height = MIN_RESOLUTION_HEIGHT;
   
+  output_screen.width = config_graphics.resolution_width;
+  output_screen.height = config_graphics.resolution_height;
+
   int settings_file_parsing_failed = parse_settings_file();
   if (settings_file_parsing_failed) {
     return 1;
@@ -88,21 +91,19 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  SDL_SetWindowMinimumSize(window, MIN_RESOLUTION_WIDTH, MIN_RESOLUTION_HEIGHT);
+
   char *file_name = "1_Generic_48x48.png";
   char *file_path = "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
-  // concatenate file_path and file_name
   char *file_relative = malloc(strlen(file_path) + strlen(file_name) + 1);
   strcpy(file_relative, file_path);
   strcat(file_relative, file_name);
-  printf("file_relative: %s\n", file_relative);
-
-  SDL_SetWindowMinimumSize(window, MIN_RESOLUTION_WIDTH, MIN_RESOLUTION_HEIGHT);
   SDL_Texture *your_image_texture = IMG_LoadTexture(renderer, file_relative);
   if (your_image_texture == NULL) {
     printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
     free_resources_renderer(renderer, window);
     return 1;
-  }
+  } 
 
   SDL_Event e;
   int quit = 0;
@@ -119,7 +120,7 @@ int main(int argc, char *argv[]) {
  
     const SDL_Rect RECT_EDITOR = {TOP_LEFT.x, TOP_LEFT.y, output_screen.width / 2,
                                   output_screen.height};
-
+    printf("RECT_EDITOR: x: %d, y: %d, w: %d, h: %d\n", RECT_EDITOR.x, RECT_EDITOR.y, RECT_EDITOR.w, RECT_EDITOR.h);
     SDL_RenderFillRect(renderer, &RECT_EDITOR);
     SDL_RenderCopy(renderer, your_image_texture, NULL, &RECT_EDITOR);
 
