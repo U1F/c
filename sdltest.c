@@ -32,9 +32,34 @@ struct Color yellow = {0xFF, 0xFF, 0x00};
 struct Color cyan = {0x00, 0xFF, 0xFF};
 struct Color magenta = {0xFF, 0x00, 0xFF};
 
+/*
+ * Handle events.
+ *
+ * e: event
+ * renderer: renderer
+ *
+ * Return value: 0 if the program should not be terminated, 1 otherwise.
+ */
 int handleEvent(SDL_Event, SDL_Renderer *);
-void free_resources_renderer( SDL_Renderer *, SDL_Window * );
-void free_resources_window( SDL_Window * );
+
+/**
+ * Free resources.
+ *
+ * renderer: renderer
+ * window: window
+ *
+ * Return value: none
+ */
+void free_resources_renderer(SDL_Renderer *, SDL_Window *);
+
+/**
+ * Free resources.
+ *
+ * window: window
+ *
+ * Return value: none
+ */
+void free_resources_window(SDL_Window *);
 
 /*
  * Main function.
@@ -80,14 +105,14 @@ int main(int argc, char *argv[]) {
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
   if (renderer == NULL) {
     printf("Error while creating SDL_Renderer: %s\n", SDL_GetError());
-    free_resources_window( window );
+    free_resources_window(window);
     return 1;
   }
   SDL_SetWindowMinimumSize(window, SCREEN_WIDTH, SCREEN_HEIGHT);
   SDL_Texture *your_image_texture = IMG_LoadTexture(renderer, "your_image.png");
   if (your_image_texture == NULL) {
     printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
-    free_resources_renderer( renderer, window );
+    free_resources_renderer(renderer, window);
     return 1;
   }
 
@@ -114,19 +139,11 @@ int main(int argc, char *argv[]) {
 
   SDL_DestroyTexture(your_image_texture);
 
-  free_resources_renderer( renderer, window );
+  free_resources_renderer(renderer, window);
 
   return 0;
 } // End of: main function
 
-/*
- * Handle events.
- *
- * e: event
- * renderer: renderer
- *
- * Return value: 0 if the program should not be terminated, 1 otherwise.
- */
 int handleEvent(SDL_Event e, SDL_Renderer *renderer) {
   int shouldQuit = 0;
   switch (e.type) {
@@ -162,16 +179,16 @@ int handleEvent(SDL_Event e, SDL_Renderer *renderer) {
   return shouldQuit;
 } // End of: handleEvent function
 
-void free_resources_renderer( SDL_Renderer *renderer, SDL_Window *window ) {
+void free_resources_renderer(SDL_Renderer *renderer, SDL_Window *window) {
   if (renderer != NULL) {
     SDL_DestroyRenderer(renderer);
   }
-  free_resources_window ( window );
+  free_resources_window(window);
 
 } // End of: free_resources_renderer function
 
-void free_resources_window( SDL_Window *window ) {
-    if (window != NULL) {
+void free_resources_window(SDL_Window *window) {
+  if (window != NULL) {
     SDL_DestroyWindow(window);
   }
   if (IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) {
@@ -181,5 +198,3 @@ void free_resources_window( SDL_Window *window ) {
     SDL_Quit();
   }
 } // End of: free_resources_window function
-
-
