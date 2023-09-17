@@ -1,3 +1,13 @@
+/**
+ * @file sdltest.c
+ * @author ulf Dellbrügge (xintamosaik@gmail.com)
+ * @brief A simple SDL2 test program.
+ * @version 0.1
+ * @date 2023-09-17
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include "sdltest.h"
 #include <stdio.h>
 
