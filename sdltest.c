@@ -18,9 +18,6 @@ static ConfigEditorSettings config_editor_settings;
 
 const int MIN_RESOLUTION_WIDTH = 800;
 const int MIN_RESOLUTION_HEIGHT = 600;
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
-const int ASSET_AREA_WIDTH = 200;
 
 const Point TOP_LEFT = {0, 0};
 
@@ -49,12 +46,12 @@ int main(int argc, char *argv[]) {
   config_graphics.full_screen = 0;
   config_graphics.resolution_width = MIN_RESOLUTION_WIDTH;
   config_graphics.resolution_height = MIN_RESOLUTION_HEIGHT;
-
+  
   int settings_file_parsing_failed = parse_settings_file();
   if (settings_file_parsing_failed) {
     return 1;
   }
-
+  
   int initialization_failed = SDL_Init(SDL_INIT_VIDEO) < 0;
   if (initialization_failed) {
     printf("Error while initializing SDL: %s\n", SDL_GetError());
@@ -89,8 +86,16 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  char *file_name = "1_Generic_48x48.png";
+  char *file_path = "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
+  // concatenate file_path and file_name
+  char *file_relative = malloc(strlen(file_path) + strlen(file_name) + 1);
+  strcpy(file_relative, file_path);
+  strcat(file_relative, file_name);
+  printf("file_relative: %s\n", file_relative);
+
   SDL_SetWindowMinimumSize(window, MIN_RESOLUTION_WIDTH, MIN_RESOLUTION_HEIGHT);
-  SDL_Texture *your_image_texture = IMG_LoadTexture(renderer, "your_image.png");
+  SDL_Texture *your_image_texture = IMG_LoadTexture(renderer, file_relative);
   if (your_image_texture == NULL) {
     printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
     free_resources_renderer(renderer, window);
@@ -109,8 +114,8 @@ int main(int argc, char *argv[]) {
     } // End of: while (SDL_PollEvent(%e))
 
     SDL_SetRenderDrawColor(renderer, CYAN.red, CYAN.green, CYAN.blue, 0xFF);
-    const SDL_Rect RECT_EDITOR = {TOP_LEFT.x, TOP_LEFT.y, ASSET_AREA_WIDTH,
-                                  SCREEN_HEIGHT};
+    const SDL_Rect RECT_EDITOR = {TOP_LEFT.x, TOP_LEFT.y, config_graphics.resolution_width / 2,
+                                  config_graphics.resolution_height};
 
     SDL_RenderFillRect(renderer, &RECT_EDITOR);
     SDL_RenderCopy(renderer, your_image_texture, NULL, &RECT_EDITOR);
