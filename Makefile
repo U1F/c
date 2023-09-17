@@ -6,7 +6,7 @@ CC = gcc
 
 #COMPILER_FLAGS specifies the additional compilation options we're using
 # Enable all warnings and treat them as errors with `-Wall -Wextra -Werror`
-COMPILER_FLAGS = -Wall -Wextra -Werror
+COMPILER_FLAGS = -Wall -Wextra -Werror -g
 
 #LINKER_FLAGS specifies the libraries we're linking against
 LINKER_FLAGS = $(shell pkg-config --cflags --libs sdl2 SDL2_image)
