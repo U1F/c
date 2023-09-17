@@ -30,6 +30,8 @@ const Color YELLOW = {0xFF, 0xFF, 0x00};
 const Color CYAN = {0x00, 0xFF, 0xFF};
 const Color MAGENTA = {0xFF, 0x00, 0xFF};
 
+Dimensions output_screen;
+
 /**
  * @brief Main function.
  *
@@ -114,8 +116,9 @@ int main(int argc, char *argv[]) {
     } // End of: while (SDL_PollEvent(%e))
 
     SDL_SetRenderDrawColor(renderer, CYAN.red, CYAN.green, CYAN.blue, 0xFF);
-    const SDL_Rect RECT_EDITOR = {TOP_LEFT.x, TOP_LEFT.y, config_graphics.resolution_width / 2,
-                                  config_graphics.resolution_height};
+ 
+    const SDL_Rect RECT_EDITOR = {TOP_LEFT.x, TOP_LEFT.y, output_screen.width / 2,
+                                  output_screen.height};
 
     SDL_RenderFillRect(renderer, &RECT_EDITOR);
     SDL_RenderCopy(renderer, your_image_texture, NULL, &RECT_EDITOR);
@@ -210,11 +213,12 @@ int handle_event(SDL_Event e, SDL_Renderer *renderer) {
     break;
   case SDL_WINDOWEVENT:
     if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-      int new_width = e.window.data1;
-      int new_height = e.window.data2;
-      if (new_width > 0 && new_height > 0) { // Only act on valid dimensions
-        SDL_RenderSetLogicalSize(renderer, new_width, new_height);
-        printf("newWidth: %d, newHeight: %d\n", new_width, new_height);
+      
+      if (e.window.data1 > 0 && e.window.data2 > 0) { // Only act on valid dimensions
+        SDL_RenderSetLogicalSize(renderer, e.window.data1, e.window.data2);
+        output_screen.width  = e.window.data1;
+        output_screen.height = e.window.data2;
+        printf("newWidth: %d, newHeight: %d\n", e.window.data1, e.window.data2);
       }
     }
     break;
