@@ -1,9 +1,9 @@
 #include "sdltest.h"
 #include <stdio.h>
 
-ConfigGraphics config_graphics;
-ConfigAudio config_audio;
-ConfigEditorSettings config_editor_settings;
+static ConfigGraphics config_graphics;
+static ConfigAudio config_audio;
+static ConfigEditorSettings config_editor_settings;
 
 const int MIN_RESOLUTION_WIDTH = 800;
 const int MIN_RESOLUTION_HEIGHT = 600;
@@ -22,6 +22,14 @@ const Color YELLOW = {0xFF, 0xFF, 0x00};
 const Color CYAN = {0x00, 0xFF, 0xFF};
 const Color MAGENTA = {0xFF, 0x00, 0xFF};
 
+/**
+ * @brief Main function.
+ * 
+ * @param argc The number of arguments passed to the program.
+ * @param argv The arguments passed to the program. 
+ * @return int The exit code of the program. 0 means success. Everything else
+ * means failure.
+ */
 int main(int argc, char *argv[]) {
   if (argc == 2) {
     printf("The program was called with the following argument: %s\n", argv[1]);
