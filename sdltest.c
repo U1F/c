@@ -168,7 +168,7 @@ void free_resources_renderer( SDL_Renderer *renderer, SDL_Window *window ) {
   }
   free_resources_window ( window );
 
-}
+} // End of: free_resources_renderer function
 
 void free_resources_window( SDL_Window *window ) {
     if (window != NULL) {
@@ -180,5 +180,6 @@ void free_resources_window( SDL_Window *window ) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     SDL_Quit();
   }
-}
+} // End of: free_resources_window function
+
 
