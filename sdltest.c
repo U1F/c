@@ -4,10 +4,11 @@
  * @brief A simple SDL2 test program.
  * @version 0.1
  * @date 2023-09-17
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
+
 #include "sdltest.h"
 #include <stdio.h>
 
@@ -34,9 +35,9 @@ const Color MAGENTA = {0xFF, 0x00, 0xFF};
 
 /**
  * @brief Main function.
- * 
+ *
  * @param argc The number of arguments passed to the program.
- * @param argv The arguments passed to the program. 
+ * @param argv The arguments passed to the program.
  * @return int The exit code of the program. 0 means success. Everything else
  * means failure.
  */
