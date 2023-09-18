@@ -4,9 +4,9 @@
  * @brief Holds the configuration for the program.
  * @version 0.1
  * @date 2023-09-18
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  * @details This file holds the configuration for the program. It is parsed from
  * a settings file.
  */
@@ -19,28 +19,27 @@ ConfigAudio config_audio;
 ConfigEditorSettings config_editor_settings;
 
 ConfigKeyHandlerPair configTable[] = {
-  {"FullScreen", setFullScreen},
-  {"ResolutionWidth", setResolutionWidth},
-  {"ResolutionHeight", setResolutionHeight},
-  {"VSync", setVSync},
-  {"AntiAliasing", setAntiAliasing},
-  {"TextureQuality", setTextureQuality},
-  {"ShaderQuality", setShaderQuality},
-  {"MasterVolume", setMasterVolume},
-  {"MusicVolume", setMusicVolume},
-  {"SFXVolume", setSFXVolume},
-  {"VoiceVolume", setVoiceVolume},
-  {"AmbienceVolume", setAmbienceVolume},
-  {"MuteAll", setMuteAll},
-  {"AudioOutput", setAudioOutput},
-  {"GridSize", setGridSize},
-  {"ShowGrid", setShowGrid},
-  {"AutoSaveInterval", setAutoSaveInterval},
-  {"UndoStackSize", setUndoStackSize},
-  {"DefaultLayer", setDefaultLayer},
-  {"SnapToGrid", setSnapToGrid},
-  {"TilesetPath", setTilesetPath},
-  
+    {"FullScreen", setFullScreen},
+    {"ResolutionWidth", setResolutionWidth},
+    {"ResolutionHeight", setResolutionHeight},
+    {"VSync", setVSync},
+    {"AntiAliasing", setAntiAliasing},
+    {"TextureQuality", setTextureQuality},
+    {"ShaderQuality", setShaderQuality},
+    {"MasterVolume", setMasterVolume},
+    {"MusicVolume", setMusicVolume},
+    {"SFXVolume", setSFXVolume},
+    {"VoiceVolume", setVoiceVolume},
+    {"AmbienceVolume", setAmbienceVolume},
+    {"MuteAll", setMuteAll},
+    {"AudioOutput", setAudioOutput},
+    {"GridSize", setGridSize},
+    {"ShowGrid", setShowGrid},
+    {"AutoSaveInterval", setAutoSaveInterval},
+    {"UndoStackSize", setUndoStackSize},
+    {"DefaultLayer", setDefaultLayer},
+    {"SnapToGrid", setSnapToGrid},
+    {"TilesetPath", setTilesetPath},
 };
 
 void setFullScreen(const char *value) {
@@ -79,9 +78,7 @@ void setMusicVolume(const char *value) {
   config_audio.music_volume = atoi(value);
 }
 
-void setSFXVolume(const char *value) {
-  config_audio.sfx_volume = atoi(value);
-}
+void setSFXVolume(const char *value) { config_audio.sfx_volume = atoi(value); }
 
 void setVoiceVolume(const char *value) {
   config_audio.voice_volume = atoi(value);
@@ -145,7 +142,8 @@ int parse_settings_file() {
     value = strtok(NULL, "\n");
 
     if (key && value) {
-      for (size_t i = 0; i < sizeof(configTable) / sizeof(ConfigKeyHandlerPair); i++) {
+      for (size_t i = 0; i < sizeof(configTable) / sizeof(ConfigKeyHandlerPair);
+           i++) {
         if (strcmp(key, configTable[i].key) == 0) {
           configTable[i].handler(value);
           break;
