@@ -75,6 +75,7 @@ typedef struct {
   ConfigHandler handler;
 } ConfigKeyHandlerPair;
 
+
 void setFullScreen(const char *value);
 void setResolutionWidth(const char *value);
 void setResolutionHeight(const char *value);
@@ -96,5 +97,8 @@ void setUndoStackSize(const char *value);
 void setDefaultLayer(const char *value);
 void setSnapToGrid(const char *value);
 void setTilesetPath(const char *value);
+
+extern ConfigKeyHandlerPair configTable[];
+
 
 #endif // SETTINGS_H
