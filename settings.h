@@ -11,6 +11,9 @@
  * a settings file.
  */
 
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
 /**
  * @brief Holds the configuration for the graphics.
  *
@@ -63,3 +66,35 @@ extern ConfigEditorSettings config_editor_settings;
  * @return int 0 if successful, 1 if not.
  */
 int parse_settings_file();
+
+
+typedef void (*ConfigHandler)(const char *value);
+
+typedef struct {
+  const char *key;
+  ConfigHandler handler;
+} ConfigKeyHandlerPair;
+
+void setFullScreen(const char *value);
+void setResolutionWidth(const char *value);
+void setResolutionHeight(const char *value);
+void setVSync(const char *value);
+void setAntiAliasing(const char *value);
+void setTextureQuality(const char *value);
+void setShaderQuality(const char *value);
+void setMasterVolume(const char *value);
+void setMusicVolume(const char *value);
+void setSFXVolume(const char *value);
+void setVoiceVolume(const char *value);
+void setAmbienceVolume(const char *value);
+void setMuteAll(const char *value);
+void setAudioOutput(const char *value);
+void setGridSize(const char *value);
+void setShowGrid(const char *value);
+void setAutoSaveInterval(const char *value);
+void setUndoStackSize(const char *value);
+void setDefaultLayer(const char *value);
+void setSnapToGrid(const char *value);
+void setTilesetPath(const char *value);
+
+#endif // SETTINGS_H
