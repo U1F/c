@@ -10,11 +10,9 @@
  */
 
 #include "sdltest.h"
+#include "settings.h"
+#include <stdbool.h>
 #include <stdio.h>
-
-static ConfigGraphics config_graphics;
-static ConfigAudio config_audio;
-static ConfigEditorSettings config_editor_settings;
 
 const int MIN_RESOLUTION_WIDTH = 800;
 const int MIN_RESOLUTION_HEIGHT = 600;
@@ -41,6 +39,7 @@ Dimensions output_screen;
  * means failure.
  */
 int main(int argc, char *argv[]) {
+
   if (argc == 2) {
     printf("The program was called with the following argument: %s\n", argv[1]);
   }
@@ -48,15 +47,19 @@ int main(int argc, char *argv[]) {
   config_graphics.full_screen = 0;
   config_graphics.resolution_width = MIN_RESOLUTION_WIDTH;
   config_graphics.resolution_height = MIN_RESOLUTION_HEIGHT;
-  
+
   output_screen.width = config_graphics.resolution_width;
   output_screen.height = config_graphics.resolution_height;
+
+  config_audio.master_volume = 100;
+
+  config_editor_settings.grid_size = 32;
 
   int settings_file_parsing_failed = parse_settings_file();
   if (settings_file_parsing_failed) {
     return 1;
   }
-  
+
   int initialization_failed = SDL_Init(SDL_INIT_VIDEO) < 0;
   if (initialization_failed) {
     printf("Error while initializing SDL: %s\n", SDL_GetError());
@@ -103,7 +106,7 @@ int main(int argc, char *argv[]) {
     printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
     free_resources_renderer(renderer, window);
     return 1;
-  } 
+  }
 
   SDL_Event e;
   int quit = 0;
@@ -117,10 +120,11 @@ int main(int argc, char *argv[]) {
     } // End of: while (SDL_PollEvent(%e))
 
     SDL_SetRenderDrawColor(renderer, CYAN.red, CYAN.green, CYAN.blue, 0xFF);
- 
-    const SDL_Rect RECT_EDITOR = {TOP_LEFT.x, TOP_LEFT.y, output_screen.width / 2,
-                                  output_screen.height};
-    printf("RECT_EDITOR: x: %d, y: %d, w: %d, h: %d\n", RECT_EDITOR.x, RECT_EDITOR.y, RECT_EDITOR.w, RECT_EDITOR.h);
+
+    const SDL_Rect RECT_EDITOR = {
+        TOP_LEFT.x, TOP_LEFT.y, output_screen.width / 2, output_screen.height};
+    printf("RECT_EDITOR: x: %d, y: %d, w: %d, h: %d\n", RECT_EDITOR.x,
+           RECT_EDITOR.y, RECT_EDITOR.w, RECT_EDITOR.h);
     SDL_RenderFillRect(renderer, &RECT_EDITOR);
     SDL_RenderCopy(renderer, your_image_texture, NULL, &RECT_EDITOR);
 
@@ -135,76 +139,6 @@ int main(int argc, char *argv[]) {
   return 0;
 } // End of: main function
 
-int parse_settings_file() {
-  FILE *file = fopen("settings.ini", "r");
-  if (file == NULL) {
-    printf("Could not open file.\n");
-    return 1;
-  }
-
-  char line[256];
-  char *key, *value;
-  while (fgets(line, sizeof(line), file)) {
-    if (line[0] == '[' || line[0] == '\n') {
-      continue; // Skip sections and empty lines
-    }
-
-    key = strtok(line, "=");
-    value = strtok(NULL, "\n");
-
-    if (key && value) {
-      printf("Key: %s, Value: %s\n", key, value);
-      if (strcmp(key, "FullScreen") == 0) {
-        printf("FullScreen: %s\n", value);
-        config_graphics.full_screen = strcmp(value, "true") == 0;
-      } else if (strcmp(key, "ResolutionWidth") == 0) {
-        config_graphics.resolution_width = atoi(value);
-      } else if (strcmp(key, "ResolutionHeight") == 0) {
-        config_graphics.resolution_height = atoi(value);
-      } else if (strcmp(key, "VSync") == 0) {
-        config_graphics.vsync = strcmp(value, "true") == 0;
-      } else if (strcmp(key, "AntiAliasing") == 0) {
-        config_graphics.anti_aliasing = atoi(value);
-      } else if (strcmp(key, "TextureQuality") == 0) {
-        config_graphics.texture_quality = strdup(value);
-      } else if (strcmp(key, "ShaderQuality") == 0) {
-        config_graphics.shader_quality = strdup(value);
-      } else if (strcmp(key, "MasterVolume") == 0) {
-        config_audio.master_volume = atoi(value);
-      } else if (strcmp(key, "MusicVolume") == 0) {
-        config_audio.music_volume = atoi(value);
-      } else if (strcmp(key, "SFXVolume") == 0) {
-        config_audio.sfx_volume = atoi(value);
-      } else if (strcmp(key, "VoiceVolume") == 0) {
-        config_audio.voice_volume = atoi(value);
-      } else if (strcmp(key, "AmbienceVolume") == 0) {
-        config_audio.ambience_volume = atoi(value);
-      } else if (strcmp(key, "MuteAll") == 0) {
-        config_audio.mute_all = strcmp(value, "true") == 0;
-      } else if (strcmp(key, "AudioOutput") == 0) {
-        config_audio.audio_output = strdup(value);
-      } else if (strcmp(key, "GridSize") == 0) {
-        config_editor_settings.grid_size = atoi(value);
-      } else if (strcmp(key, "ShowGrid") == 0) {
-        config_editor_settings.show_grid = strcmp(value, "true") == 0;
-      } else if (strcmp(key, "AutoSaveInterval") == 0) {
-        config_editor_settings.auto_save_interval = atoi(value);
-      } else if (strcmp(key, "UndoStackSize") == 0) {
-        config_editor_settings.undo_stack_size = atoi(value);
-      } else if (strcmp(key, "DefaultLayer") == 0) {
-        config_editor_settings.default_layer = atoi(value);
-      } else if (strcmp(key, "SnapToGrid") == 0) {
-        config_editor_settings.snap_to_grid = strcmp(value, "true") == 0;
-      } else if (strcmp(key, "TilesetPath") == 0) {
-        config_editor_settings.tileset_path = strdup(value);
-      }
-    }
-  }
-
-  fclose(file);
-  return 0;
-} // End of: parse_settings_file function
-
 int handle_event(SDL_Event e, SDL_Renderer *renderer) {
   int should_quit = 0;
   switch (e.type) {
@@ -214,10 +148,11 @@ int handle_event(SDL_Event e, SDL_Renderer *renderer) {
     break;
   case SDL_WINDOWEVENT:
     if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-      
-      if (e.window.data1 > 0 && e.window.data2 > 0) { // Only act on valid dimensions
+
+      if (e.window.data1 > 0 &&
+          e.window.data2 > 0) { // Only act on valid dimensions
         SDL_RenderSetLogicalSize(renderer, e.window.data1, e.window.data2);
-        output_screen.width  = e.window.data1;
+        output_screen.width = e.window.data1;
         output_screen.height = e.window.data2;
         printf("newWidth: %d, newHeight: %d\n", e.window.data1, e.window.data2);
       }

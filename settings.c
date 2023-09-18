@@ -1,9 +1,9 @@
 #include "settings.h"
 #include "sdltest.h"
 
-extern ConfigGraphics config_graphics;
-extern ConfigAudio config_audio;
-extern ConfigEditorSettings config_editor_settings;
+ConfigGraphics config_graphics;
+ConfigAudio config_audio;
+ConfigEditorSettings config_editor_settings;
 
 int parse_settings_file() {
   FILE *file = fopen("settings.ini", "r");
@@ -74,5 +74,3 @@ int parse_settings_file() {
   fclose(file);
   return 0;
 } // End of: parse_settings_file function
-
-
