@@ -21,12 +21,12 @@ const int MIN_RESOLUTION_HEIGHT = 600;
 
 const Point TOP_LEFT = {0, 0};
 
-const Color WHITE = {0xFF, 0xFF, 0xfF};
-const Color BLACK = {0x00, 0x00, 0x00};
-const Color RED = {0xFF, 0x00, 0x00};
-const Color GREEN = {0x00, 0xFF, 0x00};
-const Color BLUE = {0x00, 0x00, 0xFF};
-const Color YELLOW = {0xFF, 0xFF, 0x00};
+// const Color WHITE = {0xFF, 0xFF, 0xfF};
+// const Color BLACK = {0x00, 0x00, 0x00};
+// const Color RED = {0xFF, 0x00, 0x00};
+// const Color GREEN = {0x00, 0xFF, 0x00};
+// const Color BLUE = {0x00, 0x00, 0xFF};
+// const Color YELLOW = {0xFF, 0xFF, 0x00};
 const Color CYAN = {0x00, 0xFF, 0xFF};
 const Color MAGENTA = {0xFF, 0x00, 0xFF};
 
@@ -98,9 +98,9 @@ int main(int argc, char *argv[]) {
 
   SDL_SetWindowMinimumSize(window, MIN_RESOLUTION_WIDTH, MIN_RESOLUTION_HEIGHT);
 
-  char *file_name = "1_Generic_48x48.png";
-  char *file_path = "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
-  char *file_relative = malloc(strlen(file_path) + strlen(file_name) + 1);
+  const char *file_name = "1_Generic_48x48.png";
+  const char *file_path = "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
+  char *file_relative = (char*) malloc(strlen(file_path) + strlen(file_name) + 1);
   strcpy(file_relative, file_path);
   strcat(file_relative, file_name);
   SDL_Texture *your_image_texture = IMG_LoadTexture(renderer, file_relative);
