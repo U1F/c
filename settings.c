@@ -14,6 +14,11 @@
 #include "settings.h"
 #include "sdltest.h"
 
+const unsigned int RESOLUTION_WIDTH_MIN = 800;
+const unsigned int RESOLUTION_HEIGHT_MIN = 600;
+const unsigned int RESOLUTION_WIDTH_MAX = 1920;
+const unsigned int RESOLUTION_HEIGHT_MAX = 1080;
+
 ConfigGraphics config_graphics;
 ConfigAudio config_audio;
 ConfigEditorSettings config_editor_settings;
@@ -47,11 +52,25 @@ void setFullScreen(const char *value) {
 }
 
 void setResolutionWidth(const char *value) {
-  config_graphics.resolution_width = atoi(value);
+  unsigned int atoi_value = atoi(value);
+  if (atoi_value < RESOLUTION_WIDTH_MIN) {
+    config_graphics.resolution_width = RESOLUTION_WIDTH_MIN;
+  } else if (atoi_value > RESOLUTION_WIDTH_MAX) {
+    config_graphics.resolution_width = RESOLUTION_WIDTH_MAX;
+  } else {
+    config_graphics.resolution_width = atoi_value;
+  }
 }
 
 void setResolutionHeight(const char *value) {
-  config_graphics.resolution_height = atoi(value);
+  unsigned int atoi_value = atoi(value);
+  if (atoi_value < RESOLUTION_HEIGHT_MIN) {
+    config_graphics.resolution_height = RESOLUTION_HEIGHT_MIN;
+  } else if (atoi_value > RESOLUTION_HEIGHT_MAX) {
+    config_graphics.resolution_height = RESOLUTION_HEIGHT_MAX;
+  } else {
+    config_graphics.resolution_height = atoi_value;
+  }
 }
 
 void setVSync(const char *value) {
