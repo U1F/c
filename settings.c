@@ -13,10 +13,13 @@
 
 #include "settings.h"
 #include "sdltest.h"
+#include <errno.h>
+
 
 const unsigned int RESOLUTION_WIDTH_MIN = 800;
-const unsigned int RESOLUTION_HEIGHT_MIN = 600;
 const unsigned int RESOLUTION_WIDTH_MAX = 1920;
+
+const unsigned int RESOLUTION_HEIGHT_MIN = 600;
 const unsigned int RESOLUTION_HEIGHT_MAX = 1080;
 
 ConfigGraphics config_graphics;
@@ -51,26 +54,31 @@ void setFullScreen(const char *value) {
   config_graphics.full_screen = strcmp(value, "true") == 0;
 }
 
-void setResolutionWidth(const char *value) {
-  unsigned int atoi_value = atoi(value);
-  if (atoi_value < RESOLUTION_WIDTH_MIN) {
-    config_graphics.resolution_width = RESOLUTION_WIDTH_MIN;
-  } else if (atoi_value > RESOLUTION_WIDTH_MAX) {
-    config_graphics.resolution_width = RESOLUTION_WIDTH_MAX;
-  } else {
-    config_graphics.resolution_width = atoi_value;
+unsigned int safeAtoi(const char *value) {
+  char *endptr;
+  long conv_value = strtol(value, &endptr, 10);
+
+  if (endptr == value || *endptr != '\0' || errno == ERANGE) {
+    return 0;
   }
+  
+  return (unsigned int)conv_value;
+}
+
+unsigned int clamp(unsigned int value, unsigned int min, unsigned int max) {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+}
+
+void setResolutionWidth(const char *value) {
+  unsigned int atoi_value = safeAtoi(value);
+  config_graphics.resolution_width = clamp(atoi_value, RESOLUTION_WIDTH_MIN, RESOLUTION_WIDTH_MAX);
 }
 
 void setResolutionHeight(const char *value) {
-  unsigned int atoi_value = atoi(value);
-  if (atoi_value < RESOLUTION_HEIGHT_MIN) {
-    config_graphics.resolution_height = RESOLUTION_HEIGHT_MIN;
-  } else if (atoi_value > RESOLUTION_HEIGHT_MAX) {
-    config_graphics.resolution_height = RESOLUTION_HEIGHT_MAX;
-  } else {
-    config_graphics.resolution_height = atoi_value;
-  }
+  unsigned int atoi_value = safeAtoi(value);
+  config_graphics.resolution_height = clamp(atoi_value, RESOLUTION_HEIGHT_MIN, RESOLUTION_HEIGHT_MAX);
 }
 
 void setVSync(const char *value) {
@@ -78,7 +86,7 @@ void setVSync(const char *value) {
 }
 
 void setAntiAliasing(const char *value) {
-  config_graphics.anti_aliasing = atoi(value);
+  config_graphics.anti_aliasing = safeAtoi(value);
 }
 
 void setTextureQuality(const char *value) {
@@ -90,21 +98,23 @@ void setShaderQuality(const char *value) {
 }
 
 void setMasterVolume(const char *value) {
-  config_audio.master_volume = atoi(value);
+  config_audio.master_volume = safeAtoi(value);
 }
 
 void setMusicVolume(const char *value) {
-  config_audio.music_volume = atoi(value);
+  config_audio.music_volume = safeAtoi(value);
 }
 
-void setSFXVolume(const char *value) { config_audio.sfx_volume = atoi(value); }
+void setSFXVolume(const char *value) { 
+  config_audio.sfx_volume = safeAtoi(value); 
+}
 
 void setVoiceVolume(const char *value) {
-  config_audio.voice_volume = atoi(value);
+  config_audio.voice_volume = safeAtoi(value);
 }
 
 void setAmbienceVolume(const char *value) {
-  config_audio.ambience_volume = atoi(value);
+  config_audio.ambience_volume = safeAtoi(value);
 }
 
 void setMuteAll(const char *value) {
@@ -116,7 +126,7 @@ void setAudioOutput(const char *value) {
 }
 
 void setGridSize(const char *value) {
-  config_editor_settings.grid_size = atoi(value);
+  config_editor_settings.grid_size = safeAtoi(value);
 }
 
 void setShowGrid(const char *value) {
@@ -124,15 +134,15 @@ void setShowGrid(const char *value) {
 }
 
 void setAutoSaveInterval(const char *value) {
-  config_editor_settings.auto_save_interval = atoi(value);
+  config_editor_settings.auto_save_interval = safeAtoi(value);
 }
 
 void setUndoStackSize(const char *value) {
-  config_editor_settings.undo_stack_size = atoi(value);
+  config_editor_settings.undo_stack_size = safeAtoi(value);
 }
 
 void setDefaultLayer(const char *value) {
-  config_editor_settings.default_layer = atoi(value);
+  config_editor_settings.default_layer = safeAtoi(value);
 }
 
 void setSnapToGrid(const char *value) {

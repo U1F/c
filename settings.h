@@ -15,9 +15,11 @@
 #define SETTINGS_H
 
 extern const unsigned int RESOLUTION_WIDTH_MIN;
-extern const unsigned int RESOLUTION_HEIGHT_MIN;
 extern const unsigned int RESOLUTION_WIDTH_MAX;
+
 extern const unsigned int RESOLUTION_HEIGHT_MAX;
+extern const unsigned int RESOLUTION_HEIGHT_MIN;
+
 
 /**
  * @brief Holds the configuration for the graphics.
