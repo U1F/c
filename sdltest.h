@@ -7,6 +7,9 @@
  *
  * @copyright Copyright (c) 2023
  *
+ * @details This is a test of the SDL2 library. It is a simple program that
+ * displays a window and a rectangle in it. The rectangle can be moved with the
+ * arrow keys (SOON).
  */
 
 #ifndef SDLTEST_H

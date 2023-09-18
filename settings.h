@@ -1,3 +1,15 @@
+/**
+ * @file settings.h
+ * @author Ulf Dellbrügge (xintamosaik@gmail.com)
+ * @brief Holds the configuration for the program.
+ * @version 0.1
+ * @date 2023-09-17
+ *  
+ * @copyright Copyright (c) 2023
+ * 
+ * @details This file holds the configuration for the program. It is parsed from
+ * a settings file.
+ */
 
 /**
  * @brief Holds the configuration for the graphics.

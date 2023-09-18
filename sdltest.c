@@ -7,6 +7,8 @@
  *
  * @copyright Copyright (c) 2023
  *
+ * @details This is a simple SDL2 test program. It displays a window and a
+ * rectangle in it. The rectangle can be moved with the arrow keys (SOON).
  */
 
 #include "sdltest.h"
