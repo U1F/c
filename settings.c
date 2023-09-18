@@ -141,9 +141,9 @@ int parse_settings_file() {
     key = strtok(line, "=");
     value = strtok(NULL, "\n");
 
+    size_t tableSize = sizeof(configTable) / sizeof(ConfigKeyHandlerPair);
     if (key && value) {
-      for (size_t i = 0; i < sizeof(configTable) / sizeof(ConfigKeyHandlerPair);
-           i++) {
+      for (size_t i = 0; i < tableSize; i++) {
         if (strcmp(key, configTable[i].key) == 0) {
           configTable[i].handler(value);
           break;
