@@ -78,4 +78,25 @@ void free_resources_renderer(SDL_Renderer *, SDL_Window *);
  */
 void free_resources_window(SDL_Window *);
 
+
+/**
+ * @brief Concatenates two paths.
+ *
+ * @param file_name The name of the file.
+ * @param name_len The length of the file name.
+ * @param file_path The path to the file.
+ * @param path_len The length of the path.
+ * @return char* The concatenated path.
+ */
+char* concat_strings(const char *, size_t, const char *, size_t);
+
+/**
+ * @brief Loads a texture from a file.
+ *
+ * @param renderer The renderer to load the texture to.
+ * @param file_relative The path to the file.
+ * @return SDL_Texture* The loaded texture.
+ */
+SDL_Texture* load_texture(SDL_Renderer *, const char *);
+
 #endif // SDLTEST_H

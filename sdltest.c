@@ -100,15 +100,14 @@ int main(int argc, char *argv[]) {
 
   const char *file_name = "1_Generic_48x48.png";
   const char *file_path = "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
-  char *file_relative = (char*) malloc(strlen(file_path) + strlen(file_name) + 1);
-  strcpy(file_relative, file_path);
-  strcat(file_relative, file_name);
-  SDL_Texture *your_image_texture = IMG_LoadTexture(renderer, file_relative);
-  if (your_image_texture == NULL) {
-    printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
-    free_resources_renderer(renderer, window);
-    return 1;
-  }
+  const char *file_relative = concat_strings(file_name, strlen(file_name), file_path, strlen(file_path));
+  SDL_Texture *your_image_texture = load_texture(renderer, file_relative);
+
+if (your_image_texture == NULL) {
+  printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
+  free_resources_renderer(renderer, window);
+  return 1;
+}
 
   SDL_Event e;
   int quit = 0;
@@ -197,3 +196,22 @@ void free_resources_window(SDL_Window *window) {
     SDL_Quit();
   }
 } // End of: free_resources_window function
+
+
+char* concat_strings(const char *file_name, size_t name_len, const char *file_path, size_t path_len) {
+  char *file_relative = (char*) malloc(path_len + name_len + 1);
+  if (file_relative == NULL) {
+    return NULL; // Memory allocation failed
+  }
+
+  memcpy(file_relative, file_path, path_len);
+  file_relative[path_len] = '\0';
+  strncat(file_relative, file_name, name_len);
+  file_relative[path_len + name_len] = '\0';
+
+  return file_relative;
+}
+
+SDL_Texture* load_texture(SDL_Renderer *renderer, const char *file_relative) {
+  return IMG_LoadTexture(renderer, file_relative);
+}
