@@ -15,13 +15,13 @@
 #define SETTINGS_H
 
 #include <string>
+#include <unordered_map>
 
 extern const unsigned int RESOLUTION_WIDTH_MIN;
 extern const unsigned int RESOLUTION_WIDTH_MAX;
 
 extern const unsigned int RESOLUTION_HEIGHT_MAX;
 extern const unsigned int RESOLUTION_HEIGHT_MIN;
-
 
 /**
  * @brief Holds the configuration for the graphics.
@@ -81,15 +81,6 @@ bool parse_settings_file(void);
  *
  */
 typedef void (*ConfigHandler)(const std::string &value);
-
-/**
- * @brief Holds a key-handler pair for the settings file.
- *
- */
-typedef struct {
-  const char *key;
-  ConfigHandler handler;
-} ConfigKeyHandlerPair;
 
 /**
  * @brief Set the Full Screen object
@@ -241,7 +232,11 @@ void setTilesetPath(const std::string &value);
 /**
  * @brief Holds the key-handler pairs for the settings file.
  *
+ * @details This is a map of strings to function pointers. The strings are the
+ * keys from the settings file. The function pointers are the handlers for the
+ * keys.
  */
-extern ConfigKeyHandlerPair configTable[];
+extern std::unordered_map<std::string, void (*)(const std::string &)>
+    configTable;
 
 #endif // SETTINGS_H

@@ -13,6 +13,11 @@
 
 #include "settings.h"
 #include "sdltest.h"
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <unordered_map>
 
 const unsigned int RESOLUTION_WIDTH_MIN = 800;
 const unsigned int RESOLUTION_WIDTH_MAX = 1920;
@@ -24,49 +29,28 @@ ConfigGraphics config_graphics;
 ConfigAudio config_audio;
 ConfigEditorSettings config_editor_settings;
 
-ConfigKeyHandlerPair configTable[] = {
-    {"FullScreen", setFullScreen},
-    {"ResolutionWidth", setResolutionWidth},
-    {"ResolutionHeight", setResolutionHeight},
-    {"VSync", setVSync},
-    {"AntiAliasing", setAntiAliasing},
-    {"TextureQuality", setTextureQuality},
-    {"ShaderQuality", setShaderQuality},
-    {"MasterVolume", setMasterVolume},
-    {"MusicVolume", setMusicVolume},
-    {"SFXVolume", setSFXVolume},
-    {"VoiceVolume", setVoiceVolume},
-    {"AmbienceVolume", setAmbienceVolume},
-    {"MuteAll", setMuteAll},
-    {"AudioOutput", setAudioOutput},
-    {"GridSize", setGridSize},
-    {"ShowGrid", setShowGrid},
-    {"AutoSaveInterval", setAutoSaveInterval},
-    {"UndoStackSize", setUndoStackSize},
-    {"DefaultLayer", setDefaultLayer},
-    {"SnapToGrid", setSnapToGrid},
-    {"TilesetPath", setTilesetPath},
-};
-
 void setFullScreen(const std::string &value) {
   config_graphics.full_screen = value == "true";
 }
 
-
 unsigned int clamp(unsigned int value, unsigned int min, unsigned int max) {
-  if (value < min) return min;
-  if (value > max) return max;
+  if (value < min)
+    return min;
+  if (value > max)
+    return max;
   return value;
 }
 
 void setResolutionWidth(const std::string &value) {
   unsigned int atoi_value = std::stoi(value);
-  config_graphics.resolution_width = clamp(atoi_value, RESOLUTION_WIDTH_MIN, RESOLUTION_WIDTH_MAX);
+  config_graphics.resolution_width =
+      clamp(atoi_value, RESOLUTION_WIDTH_MIN, RESOLUTION_WIDTH_MAX);
 }
 
 void setResolutionHeight(const std::string &value) {
   unsigned int atoi_value = std::stoi(value);
-  config_graphics.resolution_height = clamp(atoi_value, RESOLUTION_HEIGHT_MIN, RESOLUTION_HEIGHT_MAX);
+  config_graphics.resolution_height =
+      clamp(atoi_value, RESOLUTION_HEIGHT_MIN, RESOLUTION_HEIGHT_MAX);
 }
 
 void setVSync(const std::string &value) {
@@ -93,8 +77,8 @@ void setMusicVolume(const std::string &value) {
   config_audio.music_volume = std::stoi(value);
 }
 
-void setSFXVolume(const std::string &value) { 
-  config_audio.sfx_volume = std::stoi(value); 
+void setSFXVolume(const std::string &value) {
+  config_audio.sfx_volume = std::stoi(value);
 }
 
 void setVoiceVolume(const std::string &value) {
@@ -142,33 +126,53 @@ void setTilesetPath(const std::string &value) {
 }
 
 bool parse_settings_file() {
-  FILE *file = fopen("settings.ini", "r");
-  if (file == NULL) {
-    printf("Could not open file.\n");
+  std::ifstream file("settings.ini");
+  if (!file.is_open()) {
+    std::cout << "Could not open file.\n";
     return true;
   }
 
-  char line[256];
-  char *key, *value;
-  while (fgets(line, sizeof(line), file)) {
-    if (line[0] == '[' || line[0] == '\n') {
-      continue; // Skip sections and empty lines
+  std::string line;
+  std::unordered_map<std::string, void (*)(const std::string &)> configTable = {
+      {"FullScreen", setFullScreen},
+      {"ResolutionWidth", setResolutionWidth},
+      {"ResolutionHeight", setResolutionHeight},
+      {"VSync", setVSync},
+      {"AntiAliasing", setAntiAliasing},
+      {"TextureQuality", setTextureQuality},
+      {"ShaderQuality", setShaderQuality},
+      {"MasterVolume", setMasterVolume},
+      {"MusicVolume", setMusicVolume},
+      {"SFXVolume", setSFXVolume},
+      {"VoiceVolume", setVoiceVolume},
+      {"AmbienceVolume", setAmbienceVolume},
+      {"MuteAll", setMuteAll},
+      {"AudioOutput", setAudioOutput},
+      {"GridSize", setGridSize},
+      {"ShowGrid", setShowGrid},
+      {"AutoSaveInterval", setAutoSaveInterval},
+      {"UndoStackSize", setUndoStackSize},
+      {"DefaultLayer", setDefaultLayer},
+      {"SnapToGrid", setSnapToGrid},
+      {"TilesetPath", setTilesetPath},
+
+  };
+
+  while (std::getline(file, line)) {
+    // Skip sections and empty lines
+    if (line[0] == '[' || line.empty()) {
+      continue;
     }
 
-    key = strtok(line, "=");
-    value = strtok(NULL, "\n");
-
-    size_t tableSize = sizeof(configTable) / sizeof(ConfigKeyHandlerPair);
-    if (key && value) {
-      for (size_t i = 0; i < tableSize; i++) {
-        if (strcmp(key, configTable[i].key) == 0) {
-          configTable[i].handler(value);
-          break;
-        }
+    std::string key, value;
+    std::istringstream iss(line);
+    if (std::getline(iss, key, '=') && std::getline(iss, value)) {
+      auto it = configTable.find(key);
+      if (it != configTable.end()) {
+        it->second(value);
       }
     }
   }
 
-  fclose(file);
   return false;
-} // End of: parse_settings_file function
+}
