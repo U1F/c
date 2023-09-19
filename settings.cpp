@@ -29,6 +29,31 @@ ConfigGraphics config_graphics;
 ConfigAudio config_audio;
 ConfigEditorSettings config_editor_settings;
 
+std::unordered_map<std::string, void (*)(const std::string &)> configTable = {
+    {"FullScreen", setFullScreen},
+    {"ResolutionWidth", setResolutionWidth},
+    {"ResolutionHeight", setResolutionHeight},
+    {"VSync", setVSync},
+    {"AntiAliasing", setAntiAliasing},
+    {"TextureQuality", setTextureQuality},
+    {"ShaderQuality", setShaderQuality},
+    {"MasterVolume", setMasterVolume},
+    {"MusicVolume", setMusicVolume},
+    {"SFXVolume", setSFXVolume},
+    {"VoiceVolume", setVoiceVolume},
+    {"AmbienceVolume", setAmbienceVolume},
+    {"MuteAll", setMuteAll},
+    {"AudioOutput", setAudioOutput},
+    {"GridSize", setGridSize},
+    {"ShowGrid", setShowGrid},
+    {"AutoSaveInterval", setAutoSaveInterval},
+    {"UndoStackSize", setUndoStackSize},
+    {"DefaultLayer", setDefaultLayer},
+    {"SnapToGrid", setSnapToGrid},
+    {"TilesetPath", setTilesetPath},
+
+};
+
 void setFullScreen(const std::string &value) {
   config_graphics.full_screen = value == "true";
 }
@@ -133,34 +158,9 @@ bool parse_settings_file() {
   }
 
   std::string line;
-  std::unordered_map<std::string, void (*)(const std::string &)> configTable = {
-      {"FullScreen", setFullScreen},
-      {"ResolutionWidth", setResolutionWidth},
-      {"ResolutionHeight", setResolutionHeight},
-      {"VSync", setVSync},
-      {"AntiAliasing", setAntiAliasing},
-      {"TextureQuality", setTextureQuality},
-      {"ShaderQuality", setShaderQuality},
-      {"MasterVolume", setMasterVolume},
-      {"MusicVolume", setMusicVolume},
-      {"SFXVolume", setSFXVolume},
-      {"VoiceVolume", setVoiceVolume},
-      {"AmbienceVolume", setAmbienceVolume},
-      {"MuteAll", setMuteAll},
-      {"AudioOutput", setAudioOutput},
-      {"GridSize", setGridSize},
-      {"ShowGrid", setShowGrid},
-      {"AutoSaveInterval", setAutoSaveInterval},
-      {"UndoStackSize", setUndoStackSize},
-      {"DefaultLayer", setDefaultLayer},
-      {"SnapToGrid", setSnapToGrid},
-      {"TilesetPath", setTilesetPath},
-
-  };
-
   while (std::getline(file, line)) {
-    // Skip sections and empty lines
-    if (line[0] == '[' || line.empty()) {
+
+    if (line.empty() || line[0] == '[' ) {
       continue;
     }
 
