@@ -14,6 +14,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <string>
+
 extern const unsigned int RESOLUTION_WIDTH_MIN;
 extern const unsigned int RESOLUTION_WIDTH_MAX;
 
@@ -26,13 +28,13 @@ extern const unsigned int RESOLUTION_HEIGHT_MIN;
  *
  */
 typedef struct {
-  int full_screen;
+  bool full_screen;
   int resolution_width;
   int resolution_height;
-  int vsync;
+  bool vsync;
   int anti_aliasing;
-  char *texture_quality;
-  char *shader_quality;
+  std::string texture_quality;
+  std::string shader_quality;
 } ConfigGraphics;
 
 /**
@@ -45,8 +47,8 @@ typedef struct {
   int sfx_volume;
   int voice_volume;
   int ambience_volume;
-  int mute_all;
-  char *audio_output;
+  bool mute_all;
+  std::string audio_output;
 } ConfigAudio;
 
 /**
@@ -59,8 +61,8 @@ typedef struct {
   int auto_save_interval;
   int undo_stack_size;
   int default_layer;
-  int snap_to_grid;
-  char *tileset_path;
+  bool snap_to_grid;
+  std::string tileset_path;
 } ConfigEditorSettings;
 
 extern ConfigGraphics config_graphics;
@@ -70,15 +72,15 @@ extern ConfigEditorSettings config_editor_settings;
 /**
  * @brief Parses the settings file and stores the values in the config structs.
  *
- * @return int 0 if successful, 1 if not.
+ * @return bool false if successful, true if not.
  */
-int parse_settings_file();
+bool parse_settings_file(void);
 
 /**
  * @brief Holds a function pointer to a handler for a config key.
  *
  */
-typedef void (*ConfigHandler)(const char *value);
+typedef void (*ConfigHandler)(const std::string &value);
 
 /**
  * @brief Holds a key-handler pair for the settings file.
@@ -94,147 +96,147 @@ typedef struct {
  *
  * @param value
  */
-void setFullScreen(const char *value);
+void setFullScreen(const std::string &value);
 
 /**
  * @brief Set the Resolution Width object
  *
  * @param value
  */
-void setResolutionWidth(const char *value);
+void setResolutionWidth(const std::string &value);
 
 /**
  * @brief Set the Resolution Height object
  *
  * @param value
  */
-void setResolutionHeight(const char *value);
+void setResolutionHeight(const std::string &value);
 
 /**
  * @brief Set the V Sync object
  *
  * @param value
  */
-void setVSync(const char *value);
+void setVSync(const std::string &value);
 
 /**
  * @brief Set the Anti Aliasing object
  *
  * @param value
  */
-void setAntiAliasing(const char *value);
+void setAntiAliasing(const std::string &value);
 
 /**
  * @brief Set the Texture Quality object
  *
  * @param value
  */
-void setTextureQuality(const char *value);
+void setTextureQuality(const std::string &value);
 
 /**
  * @brief Set the Shader Quality object
  *
  * @param value
  */
-void setShaderQuality(const char *value);
+void setShaderQuality(const std::string &value);
 
 /**
  * @brief Set the Master Volume object
  *
  * @param value
  */
-void setMasterVolume(const char *value);
+void setMasterVolume(const std::string &value);
 
 /**
  * @brief Set the Music Volume object
  *
  * @param value
  */
-void setMusicVolume(const char *value);
+void setMusicVolume(const std::string &value);
 
 /**
  * @brief Set the SFX Volume object
  *
  * @param value
  */
-void setSFXVolume(const char *value);
+void setSFXVolume(const std::string &value);
 
 /**
  * @brief Set the Voice Volume object
  *
  * @param value
  */
-void setVoiceVolume(const char *value);
+void setVoiceVolume(const std::string &value);
 
 /**
  * @brief Set the Ambience Volume object
  *
  * @param value
  */
-void setAmbienceVolume(const char *value);
+void setAmbienceVolume(const std::string &value);
 
 /**
  * @brief Set the Mute All object
  *
  * @param value
  */
-void setMuteAll(const char *value);
+void setMuteAll(const std::string &value);
 
 /**
  * @brief Set the Audio Output object
  *
  * @param value
  */
-void setAudioOutput(const char *value);
+void setAudioOutput(const std::string &value);
 
 /**
  * @brief Set the Grid Size object
  *
  * @param value
  */
-void setGridSize(const char *value);
+void setGridSize(const std::string &value);
 
 /**
  * @brief Set the Show Grid object
  *
  * @param value
  */
-void setShowGrid(const char *value);
+void setShowGrid(const std::string &value);
 
 /**
  * @brief Set the Auto Save Interval object
  *
  * @param value
  */
-void setAutoSaveInterval(const char *value);
+void setAutoSaveInterval(const std::string &value);
 
 /**
  * @brief Set the Undo Stack Size object
  *
  * @param value
  */
-void setUndoStackSize(const char *value);
+void setUndoStackSize(const std::string &value);
 
 /**
  * @brief Set the Default Layer object
  *
  * @param value
  */
-void setDefaultLayer(const char *value);
+void setDefaultLayer(const std::string &value);
 
 /**
  * @brief Set the Snap To Grid object
  *
  * @param value
  */
-void setSnapToGrid(const char *value);
+void setSnapToGrid(const std::string &value);
 
 /**
  * @brief Set the Tileset Path object
  *
  * @param value
  */
-void setTilesetPath(const char *value);
+void setTilesetPath(const std::string &value);
 
 /**
  * @brief Holds the key-handler pairs for the settings file.

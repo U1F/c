@@ -13,8 +13,9 @@
 
 #include "sdltest.h"
 #include "settings.h"
-#include <stdbool.h>
-#include <stdio.h>
+
+#include <cstdio>
+#include <string>
 
 const int MIN_RESOLUTION_WIDTH = 800;
 const int MIN_RESOLUTION_HEIGHT = 600;
@@ -40,7 +41,7 @@ Dimensions output_screen;
  * @return int The exit code of the program. 0 means success. Everything else
  * means failure.
  */
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 
   if (argc == 2) {
     printf("The program was called with the following argument: %s\n", argv[1]);
@@ -98,9 +99,9 @@ int main(int argc, char *argv[]) {
 
   SDL_SetWindowMinimumSize(window, MIN_RESOLUTION_WIDTH, MIN_RESOLUTION_HEIGHT);
 
-  const char *file_name = "1_Generic_48x48.png";
-  const char *file_path = "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
-  const char *file_relative = concat_strings(file_name, strlen(file_name), file_path, strlen(file_path));
+  std::string file_name = "1_Generic_48x48.png";
+  std::string file_path = "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
+  std::string file_relative = file_path + file_name;
   SDL_Texture *your_image_texture = load_texture(renderer, file_relative);
 
 if (your_image_texture == NULL) {
@@ -140,12 +141,12 @@ if (your_image_texture == NULL) {
   return 0;
 } // End of: main function
 
-int handle_event(SDL_Event e, SDL_Renderer *renderer) {
-  int should_quit = 0;
+bool handle_event(SDL_Event e, SDL_Renderer *renderer) {
+  bool should_quit = false;
   switch (e.type) {
   case SDL_QUIT:
     printf("The app was terminated by the user.\n");
-    should_quit = 1;
+    should_quit = true;
     break;
   case SDL_WINDOWEVENT:
     if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
@@ -198,20 +199,7 @@ void free_resources_window(SDL_Window *window) {
 } // End of: free_resources_window function
 
 
-char* concat_strings(const char *file_name, size_t name_len, const char *file_path, size_t path_len) {
-  char *file_relative = (char*) malloc(path_len + name_len + 1);
-  if (file_relative == NULL) {
-    return NULL; // Memory allocation failed
-  }
 
-  memcpy(file_relative, file_path, path_len);
-  file_relative[path_len] = '\0';
-  strncat(file_relative, file_name, name_len);
-  file_relative[path_len + name_len] = '\0';
-
-  return file_relative;
-}
-
-SDL_Texture* load_texture(SDL_Renderer *renderer, const char *file_relative) {
-  return IMG_LoadTexture(renderer, file_relative);
+SDL_Texture* load_texture(SDL_Renderer *renderer, const std::string& file_relative) {
+  return IMG_LoadTexture(renderer, file_relative.c_str());
 }

@@ -13,8 +13,6 @@
 
 #include "settings.h"
 #include "sdltest.h"
-#include <errno.h>
-
 
 const unsigned int RESOLUTION_WIDTH_MIN = 800;
 const unsigned int RESOLUTION_WIDTH_MAX = 1920;
@@ -50,20 +48,10 @@ ConfigKeyHandlerPair configTable[] = {
     {"TilesetPath", setTilesetPath},
 };
 
-void setFullScreen(const char *value) {
-  config_graphics.full_screen = strcmp(value, "true") == 0;
+void setFullScreen(const std::string &value) {
+  config_graphics.full_screen = value == "true";
 }
 
-unsigned int safeAtoi(const char *value) {
-  char *endptr;
-  long conv_value = strtol(value, &endptr, 10);
-
-  if (endptr == value || *endptr != '\0' || errno == ERANGE) {
-    return 0;
-  }
-  
-  return (unsigned int)conv_value;
-}
 
 unsigned int clamp(unsigned int value, unsigned int min, unsigned int max) {
   if (value < min) return min;
@@ -71,93 +59,93 @@ unsigned int clamp(unsigned int value, unsigned int min, unsigned int max) {
   return value;
 }
 
-void setResolutionWidth(const char *value) {
-  unsigned int atoi_value = safeAtoi(value);
+void setResolutionWidth(const std::string &value) {
+  unsigned int atoi_value = std::stoi(value);
   config_graphics.resolution_width = clamp(atoi_value, RESOLUTION_WIDTH_MIN, RESOLUTION_WIDTH_MAX);
 }
 
-void setResolutionHeight(const char *value) {
-  unsigned int atoi_value = safeAtoi(value);
+void setResolutionHeight(const std::string &value) {
+  unsigned int atoi_value = std::stoi(value);
   config_graphics.resolution_height = clamp(atoi_value, RESOLUTION_HEIGHT_MIN, RESOLUTION_HEIGHT_MAX);
 }
 
-void setVSync(const char *value) {
-  config_graphics.vsync = strcmp(value, "true") == 0;
+void setVSync(const std::string &value) {
+  config_graphics.vsync = value == "true";
 }
 
-void setAntiAliasing(const char *value) {
-  config_graphics.anti_aliasing = safeAtoi(value);
+void setAntiAliasing(const std::string &value) {
+  config_graphics.anti_aliasing = std::stoi(value);
 }
 
-void setTextureQuality(const char *value) {
-  config_graphics.texture_quality = strdup(value);
+void setTextureQuality(const std::string &value) {
+  config_graphics.texture_quality = value;
 }
 
-void setShaderQuality(const char *value) {
-  config_graphics.shader_quality = strdup(value);
+void setShaderQuality(const std::string &value) {
+  config_graphics.shader_quality = value;
 }
 
-void setMasterVolume(const char *value) {
-  config_audio.master_volume = safeAtoi(value);
+void setMasterVolume(const std::string &value) {
+  config_audio.master_volume = std::stoi(value);
 }
 
-void setMusicVolume(const char *value) {
-  config_audio.music_volume = safeAtoi(value);
+void setMusicVolume(const std::string &value) {
+  config_audio.music_volume = std::stoi(value);
 }
 
-void setSFXVolume(const char *value) { 
-  config_audio.sfx_volume = safeAtoi(value); 
+void setSFXVolume(const std::string &value) { 
+  config_audio.sfx_volume = std::stoi(value); 
 }
 
-void setVoiceVolume(const char *value) {
-  config_audio.voice_volume = safeAtoi(value);
+void setVoiceVolume(const std::string &value) {
+  config_audio.voice_volume = std::stoi(value);
 }
 
-void setAmbienceVolume(const char *value) {
-  config_audio.ambience_volume = safeAtoi(value);
+void setAmbienceVolume(const std::string &value) {
+  config_audio.ambience_volume = std::stoi(value);
 }
 
-void setMuteAll(const char *value) {
-  config_audio.mute_all = strcmp(value, "true") == 0;
+void setMuteAll(const std::string &value) {
+  config_audio.mute_all = value == "true";
 }
 
-void setAudioOutput(const char *value) {
-  config_audio.audio_output = strdup(value);
+void setAudioOutput(const std::string &value) {
+  config_audio.audio_output = value;
 }
 
-void setGridSize(const char *value) {
-  config_editor_settings.grid_size = safeAtoi(value);
+void setGridSize(const std::string &value) {
+  config_editor_settings.grid_size = std::stoi(value);
 }
 
-void setShowGrid(const char *value) {
-  config_editor_settings.show_grid = strcmp(value, "true") == 0;
+void setShowGrid(const std::string &value) {
+  config_editor_settings.show_grid = value == "true";
 }
 
-void setAutoSaveInterval(const char *value) {
-  config_editor_settings.auto_save_interval = safeAtoi(value);
+void setAutoSaveInterval(const std::string &value) {
+  config_editor_settings.auto_save_interval = std::stoi(value);
 }
 
-void setUndoStackSize(const char *value) {
-  config_editor_settings.undo_stack_size = safeAtoi(value);
+void setUndoStackSize(const std::string &value) {
+  config_editor_settings.undo_stack_size = std::stoi(value);
 }
 
-void setDefaultLayer(const char *value) {
-  config_editor_settings.default_layer = safeAtoi(value);
+void setDefaultLayer(const std::string &value) {
+  config_editor_settings.default_layer = std::stoi(value);
 }
 
-void setSnapToGrid(const char *value) {
-  config_editor_settings.snap_to_grid = strcmp(value, "true") == 0;
+void setSnapToGrid(const std::string &value) {
+  config_editor_settings.snap_to_grid = value == "true";
 }
 
-void setTilesetPath(const char *value) {
-  config_editor_settings.tileset_path = strdup(value);
+void setTilesetPath(const std::string &value) {
+  config_editor_settings.tileset_path = value;
 }
 
-int parse_settings_file() {
+bool parse_settings_file() {
   FILE *file = fopen("settings.ini", "r");
   if (file == NULL) {
     printf("Could not open file.\n");
-    return 1;
+    return true;
   }
 
   char line[256];
@@ -182,5 +170,5 @@ int parse_settings_file() {
   }
 
   fclose(file);
-  return 0;
+  return false;
 } // End of: parse_settings_file function

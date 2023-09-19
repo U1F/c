@@ -17,7 +17,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <stdio.h>
+#include <string>
 
 /**
  * @brief Description of a point.
@@ -59,9 +59,9 @@ typedef struct {
 /**
  * @brief Handles events from the event queue.
  *
- * @return int 0 if the program should continue, 1 if it should quit.
+ * @return false if the program should continue, true if it should quit.
  */
-int handle_event(SDL_Event, SDL_Renderer *);
+bool handle_event(SDL_Event, SDL_Renderer *);
 
 /**
  * @brief Frees all resources from the renderer "backwards".
@@ -78,18 +78,6 @@ void free_resources_renderer(SDL_Renderer *, SDL_Window *);
  */
 void free_resources_window(SDL_Window *);
 
-
-/**
- * @brief Concatenates two paths.
- *
- * @param file_name The name of the file.
- * @param name_len The length of the file name.
- * @param file_path The path to the file.
- * @param path_len The length of the path.
- * @return char* The concatenated path.
- */
-char* concat_strings(const char *, size_t, const char *, size_t);
-
 /**
  * @brief Loads a texture from a file.
  *
@@ -97,6 +85,6 @@ char* concat_strings(const char *, size_t, const char *, size_t);
  * @param file_relative The path to the file.
  * @return SDL_Texture* The loaded texture.
  */
-SDL_Texture* load_texture(SDL_Renderer *, const char *);
+SDL_Texture* load_texture(SDL_Renderer *, const  std::string &);
 
 #endif // SDLTEST_H
