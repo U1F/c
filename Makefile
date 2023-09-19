@@ -1,8 +1,8 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = sdltest.c settings.c
+OBJS = sdltest.cpp settings.cpp
 
 #CC specifies which compiler we're using
-CC = gcc
+CC = g++
 
 #COMPILER_FLAGS specifies the additional compilation options we're using
 # Enable all warnings and treat them as errors with `-Wall -Wextra -Werror`
