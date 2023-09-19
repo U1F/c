@@ -85,6 +85,6 @@ void free_resources_window(SDL_Window *);
  * @param file_relative The path to the file.
  * @return SDL_Texture* The loaded texture.
  */
-SDL_Texture* load_texture(SDL_Renderer *, const  std::string &);
+SDL_Texture *load_texture(SDL_Renderer *, const std::string &);
 
 #endif // SDLTEST_H

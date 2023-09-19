@@ -41,7 +41,7 @@ Dimensions output_screen;
  * @return int The exit code of the program. 0 means success. Everything else
  * means failure.
  */
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 
   if (argc == 2) {
     printf("The program was called with the following argument: %s\n", argv[1]);
@@ -100,15 +100,16 @@ int main(int argc, char* argv[]) {
   SDL_SetWindowMinimumSize(window, MIN_RESOLUTION_WIDTH, MIN_RESOLUTION_HEIGHT);
 
   std::string file_name = "1_Generic_48x48.png";
-  std::string file_path = "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
+  std::string file_path =
+      "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
   std::string file_relative = file_path + file_name;
   SDL_Texture *your_image_texture = load_texture(renderer, file_relative);
 
-if (your_image_texture == NULL) {
-  printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
-  free_resources_renderer(renderer, window);
-  return 1;
-}
+  if (your_image_texture == NULL) {
+    printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
+    free_resources_renderer(renderer, window);
+    return 1;
+  }
 
   SDL_Event e;
   int quit = 0;
@@ -198,8 +199,7 @@ void free_resources_window(SDL_Window *window) {
   }
 } // End of: free_resources_window function
 
-
-
-SDL_Texture* load_texture(SDL_Renderer *renderer, const std::string& file_relative) {
+SDL_Texture *load_texture(SDL_Renderer *renderer,
+                          const std::string &file_relative) {
   return IMG_LoadTexture(renderer, file_relative.c_str());
 }
