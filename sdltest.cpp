@@ -15,7 +15,10 @@
 #include "settings.h"
 
 #include <cstdio>
+#include <iostream>
 #include <string>
+
+using namespace std;
 
 const int MIN_RESOLUTION_WIDTH = 800;
 const int MIN_RESOLUTION_HEIGHT = 600;
@@ -41,10 +44,11 @@ Dimensions output_screen;
  * @return int The exit code of the program. 0 means success. Everything else
  * means failure.
  */
-int main(int argc, char *argv[]) {
+int main(int argc, const char *argv[]) {
 
   if (argc == 2) {
-    printf("The program was called with the following argument: %s\n", argv[1]);
+    cout << "The program was called with the following argument: " << argv[1]
+         << endl;
   }
 
   config_graphics.full_screen = 0;
@@ -65,15 +69,15 @@ int main(int argc, char *argv[]) {
 
   int initialization_failed = SDL_Init(SDL_INIT_VIDEO) < 0;
   if (initialization_failed) {
-    printf("Error while initializing SDL: %s\n", SDL_GetError());
+    cout << "Error while initializing SDL: " << SDL_GetError() << endl;
     return 1;
   }
 
   int img_initialization_failed =
       (IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG;
   if (img_initialization_failed) {
-    printf("SDL_image could not initialize! SDL_image Error: %s\n",
-           IMG_GetError());
+    cout << "SDL_image could not initialize! SDL_image Error: "
+         << IMG_GetError() << endl;
     SDL_Quit();
     return 1;
   }
@@ -84,7 +88,7 @@ int main(int argc, char *argv[]) {
       config_graphics.resolution_width, config_graphics.resolution_height,
       SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
   if (window == NULL) {
-    printf("Error while creating SDL_Window: %s\n", SDL_GetError());
+    cout << "Error while creating SDL_Window: " << SDL_GetError() << endl;
     SDL_Quit();
     return 1;
   }
@@ -92,21 +96,21 @@ int main(int argc, char *argv[]) {
   SDL_Renderer *renderer = NULL;
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
   if (renderer == NULL) {
-    printf("Error while creating SDL_Renderer: %s\n", SDL_GetError());
+    cout << "Error while creating SDL_Renderer: " << SDL_GetError() << endl;
     free_resources_window(window);
     return 1;
   }
 
   SDL_SetWindowMinimumSize(window, MIN_RESOLUTION_WIDTH, MIN_RESOLUTION_HEIGHT);
 
-  std::string file_name = "1_Generic_48x48.png";
-  std::string file_path =
-      "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
-  std::string file_relative = file_path + file_name;
-  SDL_Texture *your_image_texture = load_texture(renderer, file_relative);
+  string file_name = "1_Generic_48x48.png";
+  string file_path = "assets/interiors/1_Interiors/48x48/Theme_Sorter_48x48/";
+  string file_relative = file_path + file_name;
 
+  SDL_Texture *your_image_texture =
+      IMG_LoadTexture(renderer, file_relative.c_str());
   if (your_image_texture == NULL) {
-    printf("Unable to create texture! SDL_image Error: %s\n", IMG_GetError());
+    cout << "Error while creating SDL_Texture: " << SDL_GetError() << endl;
     free_resources_renderer(renderer, window);
     return 1;
   }
@@ -126,12 +130,9 @@ int main(int argc, char *argv[]) {
 
     const SDL_Rect RECT_EDITOR = {
         TOP_LEFT.x, TOP_LEFT.y, output_screen.width / 2, output_screen.height};
-    printf("RECT_EDITOR: x: %d, y: %d, w: %d, h: %d\n", RECT_EDITOR.x,
-           RECT_EDITOR.y, RECT_EDITOR.w, RECT_EDITOR.h);
     SDL_RenderFillRect(renderer, &RECT_EDITOR);
     SDL_RenderCopy(renderer, your_image_texture, NULL, &RECT_EDITOR);
 
-    // Update screen
     SDL_RenderPresent(renderer);
   } // End of: while (quit == 0)
 
@@ -146,7 +147,7 @@ bool handle_event(SDL_Event e, SDL_Renderer *renderer) {
   bool should_quit = false;
   switch (e.type) {
   case SDL_QUIT:
-    printf("The app was terminated by the user.\n");
+    cout << "The app was terminated by the user." << endl;
     should_quit = true;
     break;
   case SDL_WINDOWEVENT:
@@ -157,21 +158,24 @@ bool handle_event(SDL_Event e, SDL_Renderer *renderer) {
         SDL_RenderSetLogicalSize(renderer, e.window.data1, e.window.data2);
         output_screen.width = e.window.data1;
         output_screen.height = e.window.data2;
-        printf("newWidth: %d, newHeight: %d\n", e.window.data1, e.window.data2);
+        cout << "newWidth: " << e.window.data1
+             << ", newHeight: " << e.window.data2 << endl;
       }
     }
     break;
   case SDL_KEYDOWN:
-    printf("SDL_KEYDOWN\n");
+    cout << "e.key.keysym.sym: " << e.key.keysym.sym << endl;
     break;
   case SDL_KEYUP:
-    printf("SDL_KEYUP\n");
+    cout << "e.key.keysym.sym: " << e.key.keysym.sym << endl;
     break;
   case SDL_MOUSEMOTION:
-    printf("SDL_MOUSEMOTION\n");
+    cout << "e.motion.x: " << e.motion.x << ", e.motion.y: " << e.motion.y
+         << endl;
     break;
   case SDL_MOUSEBUTTONDOWN:
-    printf("SDL_MOUSEBUTTONDOWN\n");
+    cout << "e.button.x: " << e.button.x << ", e.button.y: " << e.button.y
+         << endl;
     break;
   default:
     break;
@@ -199,7 +203,6 @@ void free_resources_window(SDL_Window *window) {
   }
 } // End of: free_resources_window function
 
-SDL_Texture *load_texture(SDL_Renderer *renderer,
-                          const std::string &file_relative) {
+SDL_Texture *load_texture(SDL_Renderer *renderer, const string &file_relative) {
   return IMG_LoadTexture(renderer, file_relative.c_str());
 }
