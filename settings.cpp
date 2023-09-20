@@ -19,6 +19,8 @@
 #include <string>
 #include <unordered_map>
 
+using namespace std;
+
 const unsigned int RESOLUTION_WIDTH_MIN = 800;
 const unsigned int RESOLUTION_WIDTH_MAX = 1920;
 
@@ -29,7 +31,7 @@ ConfigGraphics config_graphics;
 ConfigAudio config_audio;
 ConfigEditorSettings config_editor_settings;
 
-std::unordered_map<std::string, void (*)(const std::string &)> configTable = {
+ConfigTableType config_table = {
     {"FullScreen", setFullScreen},
     {"ResolutionWidth", setResolutionWidth},
     {"ResolutionHeight", setResolutionHeight},
@@ -54,7 +56,7 @@ std::unordered_map<std::string, void (*)(const std::string &)> configTable = {
 
 };
 
-void setFullScreen(const std::string &value) {
+void setFullScreen(const string &value) {
   config_graphics.full_screen = value == "true";
 }
 
@@ -66,109 +68,109 @@ unsigned int clamp(unsigned int value, unsigned int min, unsigned int max) {
   return value;
 }
 
-void setResolutionWidth(const std::string &value) {
-  unsigned int atoi_value = std::stoi(value);
+void setResolutionWidth(const string &value) {
+  unsigned int atoi_value = stoi(value);
   config_graphics.resolution_width =
       clamp(atoi_value, RESOLUTION_WIDTH_MIN, RESOLUTION_WIDTH_MAX);
 }
 
-void setResolutionHeight(const std::string &value) {
-  unsigned int atoi_value = std::stoi(value);
+void setResolutionHeight(const string &value) {
+  unsigned int atoi_value = stoi(value);
   config_graphics.resolution_height =
       clamp(atoi_value, RESOLUTION_HEIGHT_MIN, RESOLUTION_HEIGHT_MAX);
 }
 
-void setVSync(const std::string &value) {
+void setVSync(const string &value) {
   config_graphics.vsync = value == "true";
 }
 
-void setAntiAliasing(const std::string &value) {
-  config_graphics.anti_aliasing = std::stoi(value);
+void setAntiAliasing(const string &value) {
+  config_graphics.anti_aliasing = stoi(value);
 }
 
-void setTextureQuality(const std::string &value) {
+void setTextureQuality(const string &value) {
   config_graphics.texture_quality = value;
 }
 
-void setShaderQuality(const std::string &value) {
+void setShaderQuality(const string &value) {
   config_graphics.shader_quality = value;
 }
 
-void setMasterVolume(const std::string &value) {
-  config_audio.master_volume = std::stoi(value);
+void setMasterVolume(const string &value) {
+  config_audio.master_volume = stoi(value);
 }
 
-void setMusicVolume(const std::string &value) {
-  config_audio.music_volume = std::stoi(value);
+void setMusicVolume(const string &value) {
+  config_audio.music_volume = stoi(value);
 }
 
-void setSFXVolume(const std::string &value) {
-  config_audio.sfx_volume = std::stoi(value);
+void setSFXVolume(const string &value) {
+  config_audio.sfx_volume = stoi(value);
 }
 
-void setVoiceVolume(const std::string &value) {
-  config_audio.voice_volume = std::stoi(value);
+void setVoiceVolume(const string &value) {
+  config_audio.voice_volume = stoi(value);
 }
 
-void setAmbienceVolume(const std::string &value) {
-  config_audio.ambience_volume = std::stoi(value);
+void setAmbienceVolume(const string &value) {
+  config_audio.ambience_volume = stoi(value);
 }
 
-void setMuteAll(const std::string &value) {
+void setMuteAll(const string &value) {
   config_audio.mute_all = value == "true";
 }
 
-void setAudioOutput(const std::string &value) {
+void setAudioOutput(const string &value) {
   config_audio.audio_output = value;
 }
 
-void setGridSize(const std::string &value) {
-  config_editor_settings.grid_size = std::stoi(value);
+void setGridSize(const string &value) {
+  config_editor_settings.grid_size = stoi(value);
 }
 
-void setShowGrid(const std::string &value) {
+void setShowGrid(const string &value) {
   config_editor_settings.show_grid = value == "true";
 }
 
-void setAutoSaveInterval(const std::string &value) {
-  config_editor_settings.auto_save_interval = std::stoi(value);
+void setAutoSaveInterval(const string &value) {
+  config_editor_settings.auto_save_interval = stoi(value);
 }
 
-void setUndoStackSize(const std::string &value) {
-  config_editor_settings.undo_stack_size = std::stoi(value);
+void setUndoStackSize(const string &value) {
+  config_editor_settings.undo_stack_size = stoi(value);
 }
 
-void setDefaultLayer(const std::string &value) {
-  config_editor_settings.default_layer = std::stoi(value);
+void setDefaultLayer(const string &value) {
+  config_editor_settings.default_layer = stoi(value);
 }
 
-void setSnapToGrid(const std::string &value) {
+void setSnapToGrid(const string &value) {
   config_editor_settings.snap_to_grid = value == "true";
 }
 
-void setTilesetPath(const std::string &value) {
+void setTilesetPath(const string &value) {
   config_editor_settings.tileset_path = value;
 }
 
 bool parse_settings_file() {
-  std::ifstream file("settings.ini");
+  ifstream file("settings.ini");
   if (!file.is_open()) {
-    std::cout << "Could not open file.\n";
+    cout << "Could not open file.\n";
     return true;
   }
 
-  std::string line;
-  while (std::getline(file, line)) {
+  string line;
+  while (getline(file, line)) {
 
     if (line.empty() || line[0] == '[' ) {
       continue;
     }
 
-    std::string key, value;
-    std::istringstream iss(line);
-    if (std::getline(iss, key, '=') && std::getline(iss, value)) {
-      auto it = configTable.find(key);
-      if (it != configTable.end()) {
+    string key, value;
+    istringstream iss(line);
+    if (getline(iss, key, '=') && getline(iss, value)) {
+      auto it = config_table.find(key);
+      if (it != config_table.end()) {
         it->second(value);
       }
     }
